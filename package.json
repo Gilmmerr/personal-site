@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc --noEmit && vite build",
-    "preview": "vite preview --port 4173"
+    "preview": "vite preview --port 4173",
+    "start": "npm run build && vite preview"
   },
   "dependencies": {
     "highlight.js": "^11.10.0",
