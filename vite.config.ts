@@ -5,6 +5,15 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   base: './',
   plugins: [react()],
+  // 部署到反向代理后面时，需要放行外部 Host，否则 Vite 会报 Blocked request
+  server: {
+    host: '0.0.0.0',
+    allowedHosts: true,
+  },
+  preview: {
+    host: '0.0.0.0',
+    allowedHosts: true,
+  },
   build: {
     outDir: 'dist',
     chunkSizeWarningLimit: 900,
