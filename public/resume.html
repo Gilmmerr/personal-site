@@ -1,0 +1,235 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Gilmmerr · 简历</title>
+    <style>
+      :root {
+        --ink: #111827;
+        --muted: #5b6472;
+        --line: #e5e7eb;
+        --accent: #4f46e5;
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        padding: 48px 20px 64px;
+        background: #f4f5f7;
+        color: var(--ink);
+        font-family: Inter, system-ui, -apple-system, 'PingFang SC', 'Microsoft YaHei', sans-serif;
+        font-size: 14px;
+        line-height: 1.75;
+      }
+      .sheet {
+        max-width: 820px;
+        margin: 0 auto;
+        padding: 48px 52px;
+        background: #fff;
+        border-radius: 6px;
+        box-shadow: 0 20px 60px -40px rgba(17, 24, 39, 0.45);
+      }
+      header {
+        padding-bottom: 20px;
+        border-bottom: 2px solid var(--ink);
+      }
+      h1 {
+        margin: 0;
+        font-size: 28px;
+        letter-spacing: -0.5px;
+      }
+      .role {
+        margin-top: 4px;
+        color: var(--accent);
+        font-size: 14px;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+      }
+      .meta {
+        margin-top: 12px;
+        color: var(--muted);
+        font-size: 12.5px;
+      }
+      .meta span + span::before {
+        content: '·';
+        margin: 0 8px;
+        color: #c3c7cf;
+      }
+      h2 {
+        margin: 30px 0 12px;
+        font-size: 12px;
+        letter-spacing: 0.18em;
+        color: var(--accent);
+        text-transform: uppercase;
+      }
+      h3 {
+        margin: 0;
+        font-size: 14.5px;
+        font-weight: 600;
+      }
+      .item {
+        margin-bottom: 14px;
+      }
+      .item .sub {
+        color: var(--muted);
+        font-size: 12.5px;
+      }
+      .item p {
+        margin: 4px 0 0;
+        color: #374151;
+      }
+      ul {
+        margin: 6px 0 0;
+        padding-left: 18px;
+        color: #374151;
+      }
+      li {
+        margin-bottom: 3px;
+      }
+      .tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        margin-top: 8px;
+      }
+      .tag {
+        padding: 1px 8px;
+        border: 1px solid var(--line);
+        border-radius: 999px;
+        color: var(--muted);
+        font-size: 11.5px;
+      }
+      .grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 4px 24px;
+      }
+      .print {
+        position: fixed;
+        right: 24px;
+        bottom: 24px;
+        padding: 10px 18px;
+        border: 0;
+        border-radius: 999px;
+        background: var(--accent);
+        color: #fff;
+        font-size: 13px;
+        cursor: pointer;
+        box-shadow: 0 12px 30px -12px rgba(79, 70, 229, 0.8);
+      }
+      .hint {
+        max-width: 820px;
+        margin: 16px auto 0;
+        color: #8b93a1;
+        font-size: 12px;
+        text-align: center;
+      }
+      @media print {
+        body {
+          padding: 0;
+          background: #fff;
+        }
+        .sheet {
+          padding: 0;
+          box-shadow: none;
+        }
+        .print,
+        .hint {
+          display: none;
+        }
+        @page {
+          margin: 16mm 14mm;
+        }
+      }
+      @media (max-width: 640px) {
+        .sheet {
+          padding: 28px 22px;
+        }
+        .grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="sheet">
+      <header>
+        <h1>Gilmmerr</h1>
+        <p class="role">前端开发 / 全栈方向 · 求职简历</p>
+        <p class="meta">
+          <span>中国 · 杭州</span>
+          <span>gilmmerr@example.com</span>
+          <span>github.com/Gilmmerr</span>
+        </p>
+      </header>
+
+      <h2>个人简介</h2>
+      <p style="margin: 0">
+        在读计算机相关专业，主攻前端与全栈。习惯先把需求写成文档再动手，实现后逐条对照验收。做过的项目覆盖 Chrome
+        扩展、Vue + Spring Boot 管理系统与纯静态站点，擅长从现象分层定位问题。
+      </p>
+
+      <h2>技能</h2>
+      <div class="grid">
+        <div><strong>前端</strong>：HTML / CSS、JavaScript、TypeScript、React、Vue 2、Tailwind CSS</div>
+        <div><strong>后端</strong>：Java、Spring Boot、MyBatis、MySQL、RESTful 接口设计</div>
+        <div><strong>工程化</strong>：Vite、Git / GitHub、Chrome 扩展 MV3、静态站部署</div>
+        <div><strong>方法</strong>：需求拆解与 PRD 撰写、AI 辅助编程、浏览器调试排错</div>
+      </div>
+
+      <h2>项目经历</h2>
+
+      <div class="item">
+        <h3>电商图片提取插件 · 独立完成</h3>
+        <p class="sub">2026.10　Chrome MV3 · JavaScript · Canvas</p>
+        <ul>
+          <li>在淘宝、京东、拼多多商品详情页一键抓取全部图片，新标签页勾选后批量保存为 PNG。</li>
+          <li>三级详情页判定 + 属性清单轮询采集，解决懒加载与虚拟列表漏图问题。</li>
+          <li>用 Canvas 重绘后导出 blob，绕开「只改扩展名不转码」的坑。</li>
+        </ul>
+        <div class="tags"><span class="tag">MV3</span><span class="tag">跨域调试</span><span class="tag">Canvas</span></div>
+      </div>
+
+      <div class="item">
+        <h3>个人展示网站 · 独立完成</h3>
+        <p class="sub">2026.10　React 18 · TypeScript · Vite · Tailwind</p>
+        <ul>
+          <li>内容与代码分离：项目与技能走数据文件，博客为 Markdown，新增文章无需改代码。</li>
+          <li>HashRouter + 相对 base，任意静态托管子路径可跑，刷新不 404。</li>
+          <li>Canvas 星空背景按视口分档粒子数，尊重 prefers-reduced-motion。</li>
+        </ul>
+        <div class="tags"><span class="tag">React</span><span class="tag">TypeScript</span><span class="tag">静态部署</span></div>
+      </div>
+
+      <div class="item">
+        <h3>学生管理系统 · 独立完成</h3>
+        <p class="sub">2026.09　Vue 2 · Element UI · Spring Boot · MyBatis · MySQL</p>
+        <ul>
+          <li>学生、课程、专业三张核心表的增删改查与关联查询，含视图、存储函数与用户授权。</li>
+          <li>统一字段命名转换（下划线 ↔ 驼峰），修复表单提交字段丢失问题。</li>
+        </ul>
+      </div>
+
+      <div class="item">
+        <h3>图片水印助手 · 独立完成</h3>
+        <p class="sub">2026.06　Canvas · 批量处理 · 浏览器本地计算</p>
+        <ul>
+          <li>支持文字与图片两种水印模式、五处预留位置、实时预览与批量导出。</li>
+          <li>批量处理改队列 + 逐帧让出，解决大批量解码阻塞主线程导致的卡死。</li>
+        </ul>
+      </div>
+
+      <h2>教育背景</h2>
+      <div class="item">
+        <h3>本科 · 计算机相关专业</h3>
+        <p class="sub">2024.09 — 至今</p>
+        <p>主修数据结构、数据库原理、计算机网络；课外以项目驱动学习。</p>
+      </div>
+    </main>
+
+    <p class="hint">按 Ctrl / Cmd + P 打印为 PDF，页面已适配 A4 打印样式。</p>
+    <button class="print" type="button" onclick="window.print()">打印 / 存为 PDF</button>
+  </body>
+</html>
