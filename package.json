@@ -10,7 +10,10 @@
     "stop": "node scripts/stop.mjs",
     "check": "node scripts/check.mjs",
     "export:seed": "node scripts/export-seed.mjs",
+    "snapshot": "node scripts/export-snapshot.mjs",
+    "prebuild": "node scripts/export-snapshot.mjs",
     "build": "tsc --noEmit && vite build",
+    "build:docs": "node scripts/export-snapshot.mjs && tsc --noEmit && vite build --outDir docs --emptyOutDir",
     "preview": "vite preview --port 4173",
     "start": "npm run build && vite preview"
   },
