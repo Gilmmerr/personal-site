@@ -8,6 +8,9 @@ const previewPort = Number(process.env.PORT) || 4173
 // 否则 dev 会占用 preview 的端口，本地预览面板扫描不到开发服务
 const DEV_PORT = 5173
 
+// 后端接口地址：本地 Spring Boot 只监听回环地址（8080 被别的服务占了，用 8081）
+const API_TARGET = 'http://127.0.0.1:8081'
+
 // base 用相对路径，配合 HashRouter，可部署在任意静态托管的任意子路径下
 export default defineConfig({
   base: './',
@@ -18,12 +21,19 @@ export default defineConfig({
     port: DEV_PORT,
     strictPort: true,
     allowedHosts: true,
+    // 开发时 /api 转发给 Spring Boot，前端不用处理跨域
+    proxy: {
+      '/api': { target: API_TARGET, changeOrigin: true },
+    },
   },
   preview: {
     host: '0.0.0.0',
     port: previewPort,
     strictPort: true,
     allowedHosts: true,
+    proxy: {
+      '/api': { target: API_TARGET, changeOrigin: true },
+    },
   },
   build: {
     outDir: 'dist',

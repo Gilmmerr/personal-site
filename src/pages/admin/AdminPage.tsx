@@ -1,8 +1,8 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Link, useNavigate, useSearchParams } from 'react-router-dom'
 import {
   ADMIN_PASSWORD,
-  saveDraft,
+  saveContent,
   useContentSnapshot,
   type Content,
   type ContentSource,
@@ -31,9 +31,9 @@ const tabs: { key: TabKey; label: string }[] = [
 ]
 
 const sourceText: Record<ContentSource, string> = {
+  database: '数据库',
+  snapshot: '静态快照',
   default: '默认内容',
-  published: '已发布版本',
-  draft: '本地草稿',
 }
 
 function readAuth(): boolean {
@@ -127,7 +127,7 @@ function Login({ onSuccess }: { onSuccess: () => void }) {
 }
 
 export function AdminPage() {
-  const { content, ready, source } = useContentSnapshot()
+  const { content, ready, source, apiReachable } = useContentSnapshot()
   const navigate = useNavigate()
   const [authed, setAuthed] = useState(readAuth)
   const [searchParams, setSearchParams] = useSearchParams()
@@ -156,23 +156,28 @@ export function AdminPage() {
     [draft, content],
   )
 
-  const onSave = () => {
-    saveDraft(draft)
-    notify('已保存，当前浏览器打开站点即可看到新内容')
-  }
+  const [saving, setSaving] = useState(false)
+
+  /** 保存 = 整份内容 PUT 到 Spring Boot，再写进 MySQL */
+  const onSave = useCallback(async () => {
+    if (saving) return
+    setSaving(true)
+    const result = await saveContent(draft)
+    setSaving(false)
+    setToast({ text: result.message, tone: result.ok ? 'ok' : 'warn', id: Date.now() })
+  }, [draft, saving])
 
   // Ctrl/Cmd + S 保存
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
       if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 's') {
         event.preventDefault()
-        saveDraft(draft)
-        notify('已保存（Ctrl + S）')
+        void onSave()
       }
     }
     window.addEventListener('keydown', onKeyDown)
     return () => window.removeEventListener('keydown', onKeyDown)
-  }, [draft])
+  }, [onSave])
 
   // 有未保存改动时离开页面给个提示
   useEffect(() => {
@@ -235,8 +240,8 @@ export function AdminPage() {
             >
               预览站点
             </a>
-            <Btn variant="primary" onClick={onSave} disabled={!dirty}>
-              保存
+            <Btn variant="primary" onClick={() => void onSave()} disabled={!dirty || saving}>
+              {saving ? '保存中…' : '保存'}
             </Btn>
             <Btn
               variant="subtle"
@@ -273,6 +278,16 @@ export function AdminPage() {
           </div>
         </div>
       </header>
+
+      {source !== 'database' && (
+        <div className="mx-auto max-w-[1320px] px-5 pt-4">
+          <div className="rounded-xl border border-amber-400/25 bg-amber-400/[0.07] px-4 py-3 text-[12px] leading-relaxed text-amber-200/85">
+            {apiReachable
+              ? '当前读到的是静态内容，不是数据库。'
+              : '没连上后端，界面显示的是静态兜底内容，保存会失败。先在项目根目录执行 npm run api 启动 Spring Boot，再刷新本页。'}
+          </div>
+        </div>
+      )}
 
       <div className="mx-auto flex max-w-[1320px] gap-8 px-5 py-7">
         <aside className="hidden w-[188px] shrink-0 lg:block">

@@ -1,13 +1,13 @@
 /**
  * 内容层：全站文案的唯一出口。
  *
- * 三级生效顺序（后面的覆盖前面的）：
- *   1. 默认内容 —— 构建期从 src/data/*.ts 与 src/content/posts/*.md 打包进来
- *   2. 已发布内容 —— 站点根目录的 content.json（后台导出后放进 public/，所有访客可见）
- *   3. 本地草稿 —— localStorage 里的编辑结果（后台保存后，当前浏览器立即生效）
+ * 数据来源按优先级：
+ *   1. 数据库 —— 本机 Spring Boot 提供的 /api/content（后台保存即写库，真正的数据源）
+ *   2. 快照   —— 站点根目录的 content.json（纯静态部署时用它兜底，随构建一起发布）
+ *   3. 默认值 —— 构建期从 src/data/*.ts 与 src/content/posts/*.md 打包进来
  *
  * 组件只通过 useContent() 取数据，不直接 import 数据文件，
- * 这样后台改完内容刷新即可全站生效，不需要改任何组件。
+ * 后台改完保存，全站立即读到新内容。
  */
 import { useMemo, useSyncExternalStore } from 'react'
 import { site as seedSite, type NavItem, type Social, type TimelineItem } from '../data/site'
@@ -40,19 +40,22 @@ export interface Content {
   posts: ContentPost[]
 }
 
-export type ContentSource = 'default' | 'published' | 'draft'
+/** database = 读到了后端数据库；snapshot = 退回静态 content.json；default = 内置默认值 */
+export type ContentSource = 'database' | 'snapshot' | 'default'
 
 export interface ContentSnapshot {
   content: Content
   source: ContentSource
-  /** content.json 探测完成后置为 true，后台在此之后才渲染表单，避免表单被异步结果覆盖 */
+  /** 首次内容加载完成后置为 true，后台在此之后才渲染表单，避免表单被异步结果覆盖 */
   ready: boolean
+  /** 后端是否连得上；读不到时后台会提示先启动 Spring Boot */
+  apiReachable: boolean
 }
 
-const DRAFT_KEY = 'personal-site:content:draft'
-const PUBLISHED_FILE = 'content.json'
+const DRAFT_ENDPOINT = '/api/content'
+const SNAPSHOT_FILE = 'content.json'
 
-/** 后台登录口令（纯前端校验，只用于挡住误入，不是真正的安全边界） */
+/** 后台登录口令（前端校验，只用于挡住误入；本地开发够用，不是真正的安全边界） */
 export const ADMIN_PASSWORD = 'admin888'
 
 const clone = <T,>(value: T): T => JSON.parse(JSON.stringify(value)) as T
@@ -152,7 +155,7 @@ function sanitizePosts(raw: unknown): ContentPost[] {
   })
 }
 
-/** 把外部 JSON（content.json 或用户导入的文件）收敛成合法的 Content，缺字段用默认值补齐 */
+/** 把外部 JSON（接口返回或导入的文件）收敛成合法的 Content，缺字段用默认值补齐 */
 export function normalizeContent(raw: unknown): Content {
   if (!raw || typeof raw !== 'object') return getDefaultContent()
   const input = raw as Partial<Content>
@@ -192,14 +195,15 @@ export function validateContent(raw: unknown): string | null {
 /* ------------------------------ 状态仓库 ------------------------------ */
 
 interface StoreState extends ContentSnapshot {
-  published: Content | null
+  snapshot: Content | null
 }
 
 let state: StoreState = {
   content: clone(defaultContent),
   source: 'default',
   ready: false,
-  published: null,
+  apiReachable: false,
+  snapshot: null,
 }
 
 const listeners = new Set<() => void>()
@@ -224,20 +228,24 @@ function getSnapshot(): StoreState {
   return state
 }
 
-function readDraft(): Content | null {
+async function fetchFromApi(): Promise<Content | null> {
   try {
-    const raw = localStorage.getItem(DRAFT_KEY)
-    if (!raw) return null
-    const parsed = JSON.parse(raw) as unknown
-    return validateContent(parsed) ? null : normalizeContent(parsed)
+    const response = await fetch(DRAFT_ENDPOINT, { cache: 'no-store' })
+    if (!response.ok) return null
+    const parsed = (await response.json()) as unknown
+    if (validateContent(parsed)) return null
+    const content = normalizeContent(parsed)
+    // 表还没灌数据时后端会返回空壳，这种情况当作没读到，继续往后退
+    if (!content.site.name && content.projects.length === 0) return null
+    return content
   } catch {
     return null
   }
 }
 
-async function fetchPublished(): Promise<Content | null> {
+async function fetchSnapshot(): Promise<Content | null> {
   try {
-    const url = new URL(PUBLISHED_FILE, document.baseURI).toString()
+    const url = new URL(SNAPSHOT_FILE, document.baseURI).toString()
     const response = await fetch(url, { cache: 'no-store' })
     if (!response.ok) return null
     const parsed = (await response.json()) as unknown
@@ -250,57 +258,75 @@ async function fetchPublished(): Promise<Content | null> {
 
 let initStarted = false
 
-/** 应用启动时调用一次：先看本地草稿，没有草稿再去拿线上 content.json */
+/** 应用启动时调用一次：先读后端数据库，读不到再退回静态快照 */
 export async function initContent(): Promise<void> {
   if (initStarted) return
   initStarted = true
 
-  const draft = readDraft()
-  if (draft) {
-    setState({ content: draft, source: 'draft', ready: true })
+  const fromApi = await fetchFromApi()
+  if (fromApi) {
+    setState({ content: fromApi, source: 'database', ready: true, apiReachable: true })
     return
   }
 
-  const published = await fetchPublished()
-  if (published) {
-    setState({ content: published, published, source: 'published', ready: true })
+  const snapshot = await fetchSnapshot()
+  if (snapshot) {
+    setState({ content: snapshot, source: 'snapshot', ready: true, snapshot })
     return
   }
 
   setState({ ready: true })
 }
 
-export function saveDraft(next: Content): void {
-  const content: Content = { ...next, updatedAt: new Date().toISOString() }
-  try {
-    localStorage.setItem(DRAFT_KEY, JSON.stringify(content))
-  } catch {
-    // 隐私模式写不进去，仍然让本次会话生效
-  }
-  setState({ content, source: 'draft', ready: true })
+export interface SaveResult {
+  ok: boolean
+  message: string
+  /** 后端回写的最终内容（带数据库生成的时间戳），调用方可用它同步编辑区 */
+  content?: Content
 }
 
-/** 丢弃本地草稿，回到「已发布 / 默认」内容 */
-export async function discardDraft(): Promise<void> {
+/** 保存到数据库：成功后全站立即读到新内容 */
+export async function saveContent(next: Content): Promise<SaveResult> {
   try {
-    localStorage.removeItem(DRAFT_KEY)
+    const response = await fetch(DRAFT_ENDPOINT, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(next),
+    })
+
+    if (!response.ok) {
+      const detail = (await response.json().catch(() => null)) as { message?: string } | null
+      return { ok: false, message: detail?.message ?? `保存失败（HTTP ${response.status}）` }
+    }
+
+    const saved = normalizeContent((await response.json()) as unknown)
+    setState({ content: saved, source: 'database', ready: true, apiReachable: true })
+    return { ok: true, message: '已保存到数据库，站点立即生效', content: saved }
   } catch {
-    // 忽略
+    setState({ apiReachable: false })
+    return { ok: false, message: '连不上后端，请先启动 Spring Boot（端口 8081）' }
   }
-  const published = state.published ?? (await fetchPublished())
-  if (published) {
-    setState({ content: published, published, source: 'published', ready: true })
-    return
+}
+
+/** 恢复成后端打包的初始内容 */
+export async function resetContent(): Promise<SaveResult> {
+  try {
+    const response = await fetch(`${DRAFT_ENDPOINT}/reset`, { method: 'POST' })
+    if (!response.ok) {
+      const detail = (await response.json().catch(() => null)) as { message?: string } | null
+      return { ok: false, message: detail?.message ?? `重置失败（HTTP ${response.status}）` }
+    }
+    const reset = normalizeContent((await response.json()) as unknown)
+    setState({ content: reset, source: 'database', ready: true, apiReachable: true })
+    return { ok: true, message: '已恢复为初始内容', content: reset }
+  } catch {
+    setState({ apiReachable: false })
+    return { ok: false, message: '连不上后端，恢复失败' }
   }
-  setState({ content: getDefaultContent(), source: 'default', ready: true })
 }
 
 export function serializeContent(content: Content): string {
   return JSON.stringify({ ...content, version: 1 }, null, 2)
-}
-
-export function getPublishedContent(): Content | null {
-  return state.published
 }
 
 /* ------------------------------ React 接口 ------------------------------ */
@@ -333,12 +359,13 @@ export function useContent(): UseContentResult {
 }
 
 /** 只关心数据的组件（后台表单）用这个，避免每处都解构一堆字段 */
-export function useContentSnapshot(): ContentSnapshot & { published: Content | null } {
+export function useContentSnapshot(): ContentSnapshot & { snapshot: Content | null } {
   const snapshot = useSyncExternalStore(subscribe, getSnapshot, getSnapshot)
   return {
     content: snapshot.content,
     source: snapshot.source,
     ready: snapshot.ready,
-    published: snapshot.published,
+    apiReachable: snapshot.apiReachable,
+    snapshot: snapshot.snapshot,
   }
 }

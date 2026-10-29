@@ -4,9 +4,9 @@ import { formatTime } from './helpers'
 import type { TabKey } from './types'
 
 const sourceText: Record<ContentSource, string> = {
+  database: 'MySQL 数据库',
+  snapshot: '静态快照',
   default: '默认内容',
-  published: '已发布 content.json',
-  draft: '本地草稿',
 }
 
 const cards: { key: TabKey; label: string; hint: string }[] = [
@@ -41,8 +41,8 @@ export function OverviewPanel({
   return (
     <Panel
       title="概览"
-      desc="这里是整站文案的控制台。左侧选模块，改完点右上角「保存」，当前浏览器立即生效。"
-      actions={<Tag tone={source === 'draft' ? 'warn' : 'ok'}>当前来源：{sourceText[source]}</Tag>}
+      desc="这里是整站文案的控制台。左侧选模块，改完点右上角「保存」，内容写进本机 MySQL，站点立即生效。"
+      actions={<Tag tone={source === 'database' ? 'ok' : 'warn'}>当前来源：{sourceText[source]}</Tag>}
     >
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         {stats.map((stat) => (
@@ -81,17 +81,19 @@ export function OverviewPanel({
         <h3 className="text-[13.5px] font-medium text-paper/85">改完内容去哪了</h3>
         <ul className="mt-3 space-y-2.5 text-[12.5px] leading-relaxed text-paper/55">
           <li>
-            <b className="font-medium text-paper/80">保存</b> → 写进浏览器 localStorage，当前浏览器全站生效
-          </li>
-          <li>
-            <b className="font-medium text-paper/80">导出 content.json</b> → 放进
+            <b className="font-medium text-paper/80">保存</b> → 写进本机 MySQL 的
             <code className="mx-1 rounded bg-white/[0.07] px-1.5 py-0.5 font-mono text-[11.5px] text-accent2">
-              public/
+              personal_site
             </code>
-            后重新部署，所有访客可见
+            库，全站立即生效
           </li>
           <li>
-            <b className="font-medium text-paper/80">丢弃草稿</b> → 回滚到线上 / 默认内容
+            <b className="font-medium text-paper/80">导出 content.json</b> → 备份用；纯静态部署时放进
+            <code className="mx-1 rounded bg-white/[0.07] px-1.5 py-0.5 font-mono text-[11.5px]">public/</code>
+            可当兜底数据
+          </li>
+          <li>
+            <b className="font-medium text-paper/80">恢复初始内容</b> → 用后端打包的 seed 覆盖数据库
           </li>
         </ul>
         <p className="mt-4 border-t border-white/[0.07] pt-3 text-[11.5px] text-paper/30">
