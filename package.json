@@ -5,6 +5,9 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "api": "node scripts/api.mjs",
+    "dev:full": "node scripts/dev.mjs",
+    "export:seed": "node scripts/export-seed.mjs",
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview --port 4173",
     "start": "npm run build && vite preview"

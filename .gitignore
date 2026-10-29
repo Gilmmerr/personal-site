@@ -3,3 +3,10 @@ dist
 .DS_Store
 *.local
 .vite
+
+# 本机数据库密码，绝不提交
+backend/src/main/resources/application-local.yml
+# Maven 编译产物
+backend/target/
+# 后端日志
+*.log

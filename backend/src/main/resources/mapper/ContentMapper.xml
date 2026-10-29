@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gilmmerr.site.mapper.ContentMapper">
+
+  <!-- ============================ 读 ============================ -->
+
+  <select id="selectProfile" resultType="map">
+    SELECT id,
+           name,
+           role,
+           tagline,
+           email,
+           location,
+           avatar,
+           resume_url AS resumeUrl,
+           DATE_FORMAT(updated_at, '%Y-%m-%dT%H:%i:%s') AS updatedAt
+    FROM site_profile
+    WHERE id = 1
+  </select>
+
+  <select id="countProfile" resultType="int">
+    SELECT COUNT(*) FROM site_profile WHERE id = 1
+  </select>
+
+  <select id="selectIntroTexts" resultType="string">
+    SELECT content FROM site_intro ORDER BY sort_no, id
+  </select>
+
+  <select id="selectFacts" resultType="map">
+    SELECT label, value FROM site_fact ORDER BY sort_no, id
+  </select>
+
+  <select id="selectSocials" resultType="map">
+    SELECT label, href, icon FROM site_social ORDER BY sort_no, id
+  </select>
+
+  <select id="selectNavs" resultType="map">
+    SELECT label, anchor AS id, path AS `to` FROM site_nav ORDER BY sort_no, id
+  </select>
+
+  <select id="selectTimelines" resultType="map">
+    SELECT period, title, org, descr AS `desc` FROM timeline_item ORDER BY sort_no, id
+  </select>
+
+  <select id="selectSkillGroups" resultType="map">
+    SELECT id, title AS `group`, descr AS `desc` FROM skill_group ORDER BY sort_no, id
+  </select>
+
+  <select id="selectSkillItems" resultType="map">
+    SELECT group_id AS groupId, name, icon, level FROM skill_item ORDER BY sort_no, id
+  </select>
+
+  <select id="selectProjects" resultType="map">
+    SELECT id, slug, title, summary, project_year AS `year`, role, cover, glyph, background, outcome
+    FROM project
+    ORDER BY sort_no, id
+  </select>
+
+  <select id="selectProjectTags" resultType="map">
+    SELECT project_id AS projectId, tag FROM project_tag ORDER BY sort_no, id
+  </select>
+
+  <select id="selectProjectLinks" resultType="map">
+    SELECT project_id AS projectId, label, href FROM project_link ORDER BY sort_no, id
+  </select>
+
+  <select id="selectProjectSteps" resultType="map">
+    SELECT project_id AS projectId, content FROM project_step ORDER BY sort_no, id
+  </select>
+
+  <select id="selectProjectChallenges" resultType="map">
+    SELECT project_id AS projectId, title, detail FROM project_challenge ORDER BY sort_no, id
+  </select>
+
+  <select id="selectPosts" resultType="map">
+    SELECT id, slug, title, publish_date AS `date`, summary, body
+    FROM post
+    ORDER BY sort_no, id
+  </select>
+
+  <select id="selectPostTags" resultType="map">
+    SELECT post_id AS postId, tag FROM post_tag ORDER BY sort_no, id
+  </select>
+
+  <select id="selectMeta" resultType="string">
+    SELECT v FROM site_meta WHERE k = #{k}
+  </select>
+
+  <!-- ============================ 写 ============================ -->
+  <!-- 策略：每次保存都整体覆盖。数据量在几十条量级，覆盖写比逐条 diff 更简单也更好排查。 -->
+
+  <insert id="upsertProfile">
+    INSERT INTO site_profile (id, name, role, tagline, email, location, avatar, resume_url, updated_at)
+    VALUES (1, #{name}, #{role}, #{tagline}, #{email}, #{location}, #{avatar}, #{resumeUrl}, NOW()) AS new
+    ON DUPLICATE KEY UPDATE name       = new.name,
+                            role       = new.role,
+                            tagline    = new.tagline,
+                            email      = new.email,
+                            location   = new.location,
+                            avatar     = new.avatar,
+                            resume_url = new.resume_url,
+                            updated_at = NOW()
+  </insert>
+
+  <insert id="upsertMeta">
+    INSERT INTO site_meta (k, v) VALUES (#{k}, #{v}) AS new
+    ON DUPLICATE KEY UPDATE v = new.v
+  </insert>
+
+  <delete id="deleteAllIntro">DELETE FROM site_intro</delete>
+  <delete id="deleteAllFacts">DELETE FROM site_fact</delete>
+  <delete id="deleteAllSocials">DELETE FROM site_social</delete>
+  <delete id="deleteAllNavs">DELETE FROM site_nav</delete>
+  <delete id="deleteAllTimelines">DELETE FROM timeline_item</delete>
+  <delete id="deleteAllSkillItems">DELETE FROM skill_item</delete>
+  <delete id="deleteAllSkillGroups">DELETE FROM skill_group</delete>
+  <delete id="deleteAllProjectTags">DELETE FROM project_tag</delete>
+  <delete id="deleteAllProjectLinks">DELETE FROM project_link</delete>
+  <delete id="deleteAllProjectSteps">DELETE FROM project_step</delete>
+  <delete id="deleteAllProjectChallenges">DELETE FROM project_challenge</delete>
+  <delete id="deleteAllProjects">DELETE FROM project</delete>
+  <delete id="deleteAllPostTags">DELETE FROM post_tag</delete>
+  <delete id="deleteAllPosts">DELETE FROM post</delete>
+
+  <insert id="insertIntro">
+    INSERT INTO site_intro (sort_no, content) VALUES (#{sortNo}, #{content})
+  </insert>
+
+  <insert id="insertFact">
+    INSERT INTO site_fact (sort_no, label, value) VALUES (#{sortNo}, #{label}, #{value})
+  </insert>
+
+  <insert id="insertSocial">
+    INSERT INTO site_social (sort_no, label, href, icon) VALUES (#{sortNo}, #{label}, #{href}, #{icon})
+  </insert>
+
+  <insert id="insertNav">
+    INSERT INTO site_nav (sort_no, label, anchor, path) VALUES (#{sortNo}, #{label}, #{anchor}, #{path})
+  </insert>
+
+  <insert id="insertTimeline">
+    INSERT INTO timeline_item (sort_no, period, title, org, descr)
+    VALUES (#{sortNo}, #{period}, #{title}, #{org}, #{descr})
+  </insert>
+
+  <insert id="insertSkillGroup" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+    INSERT INTO skill_group (sort_no, title, descr) VALUES (#{sortNo}, #{title}, #{descr})
+  </insert>
+
+  <insert id="insertSkillItem">
+    INSERT INTO skill_item (group_id, sort_no, name, icon, level)
+    VALUES (#{groupId}, #{sortNo}, #{name}, #{icon}, #{level})
+  </insert>
+
+  <insert id="insertProject" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+    INSERT INTO project (sort_no, slug, title, summary, project_year, role, cover, glyph, background, outcome)
+    VALUES (#{sortNo}, #{slug}, #{title}, #{summary}, #{projectYear}, #{role}, #{cover}, #{glyph}, #{background},
+            #{outcome})
+  </insert>
+
+  <insert id="insertProjectTag">
+    INSERT INTO project_tag (project_id, sort_no, tag) VALUES (#{projectId}, #{sortNo}, #{tag})
+  </insert>
+
+  <insert id="insertProjectLink">
+    INSERT INTO project_link (project_id, sort_no, label, href) VALUES (#{projectId}, #{sortNo}, #{label}, #{href})
+  </insert>
+
+  <insert id="insertProjectStep">
+    INSERT INTO project_step (project_id, sort_no, content) VALUES (#{projectId}, #{sortNo}, #{content})
+  </insert>
+
+  <insert id="insertProjectChallenge">
+    INSERT INTO project_challenge (project_id, sort_no, title, detail)
+    VALUES (#{projectId}, #{sortNo}, #{title}, #{detail})
+  </insert>
+
+  <insert id="insertPost" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+    INSERT INTO post (sort_no, slug, title, publish_date, summary, body)
+    VALUES (#{sortNo}, #{slug}, #{title}, #{publishDate}, #{summary}, #{body})
+  </insert>
+
+  <insert id="insertPostTag">
+    INSERT INTO post_tag (post_id, sort_no, tag) VALUES (#{postId}, #{sortNo}, #{tag})
+  </insert>
+
+</mapper>

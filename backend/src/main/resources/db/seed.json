@@ -1,0 +1,430 @@
+{
+  "version": 1,
+  "updatedAt": "",
+  "site": {
+    "name": "Gilmmerr",
+    "role": "前端开发 / 工程实践",
+    "tagline": "把模糊的想法，拆成能跑起来的东西。",
+    "email": "gilmmerr@example.com",
+    "location": "中国 · 杭州",
+    "avatar": "./avatar.svg",
+    "intro": [
+      "我是 Gilmmerr，在读计算机相关专业，主要精力放在前端与全栈方向。习惯把需求先写成文档，再让 AI 按文档实现，最后自己逐条验收——写文档这一步看着慢，实际能省掉大量返工。",
+      "做过的东西跨度不算小：Chrome 扩展、Vue + Spring Boot 的管理系统、纯静态的个人站点。共同点是都会把踩过的坑记下来，所以这个站里的文章多是「怎么排查」，而不是「怎么用」。",
+      "目前在找一个能长期做下去的前端方向，也在持续补工程化与后端基础。"
+    ],
+    "socials": [
+      {
+        "label": "GitHub",
+        "href": "https://github.com/Gilmmerr",
+        "icon": "github"
+      },
+      {
+        "label": "邮箱",
+        "href": "mailto:gilmmerr@example.com",
+        "icon": "mail"
+      }
+    ],
+    "nav": [
+      {
+        "label": "首页",
+        "id": "home"
+      },
+      {
+        "label": "关于",
+        "id": "about"
+      },
+      {
+        "label": "技能",
+        "id": "skills"
+      },
+      {
+        "label": "项目",
+        "id": "projects"
+      },
+      {
+        "label": "博客",
+        "to": "/blog"
+      },
+      {
+        "label": "联系",
+        "id": "contact"
+      }
+    ],
+    "timeline": [
+      {
+        "period": "2026.10 — 至今",
+        "title": "实习 · AI 编程实践",
+        "org": "技术部",
+        "desc": "按「需求研究 → PRD → 技术设计 → AGENTS.md → 分步实现 → 部署」的流程独立完成两个项目：Chrome 电商图片提取插件与个人展示站，代码托管在 GitHub，站点部署在静态平台。"
+      },
+      {
+        "period": "2026.09 — 2026.10",
+        "title": "学生管理系统（课程项目）",
+        "org": "数据库课程",
+        "desc": "Vue + Element UI 做前端，Spring Boot + MyBatis + MySQL 做后端，完成学生、课程、专业三张核心表的增删改查与权限设计，重点处理下划线命名与驼峰命名的字段映射。"
+      },
+      {
+        "period": "2026.06 — 2026.09",
+        "title": "低代码应用实践",
+        "org": "妙搭",
+        "desc": "用平台能力做了图片水印助手与 AI 翻译助手两个小应用，全部在浏览器本地处理，不上传原图，交付时通过了类型检查与构建校验。"
+      },
+      {
+        "period": "2024.09 — 至今",
+        "title": "本科在读",
+        "org": "计算机相关专业",
+        "desc": "主修数据结构、数据库原理、计算机网络。课外以项目驱动学习，习惯用真实需求倒逼补齐知识。"
+      }
+    ],
+    "resumeUrl": "./resume.html",
+    "facts": [
+      {
+        "label": "当前方向",
+        "value": "前端开发 / 全栈"
+      },
+      {
+        "label": "可投入时间",
+        "value": "全职实习"
+      },
+      {
+        "label": "常用工具",
+        "value": "VS Code · Vite · WorkBuddy"
+      },
+      {
+        "label": "联系方式",
+        "value": "gilmmerr@example.com"
+      }
+    ]
+  },
+  "skillGroups": [
+    {
+      "group": "前端开发",
+      "desc": "日常主力，组件拆分、状态管理与响应式布局",
+      "items": [
+        {
+          "name": "HTML / CSS",
+          "icon": "🎨",
+          "level": 90
+        },
+        {
+          "name": "JavaScript (ES6+)",
+          "icon": "🟨",
+          "level": 85
+        },
+        {
+          "name": "TypeScript",
+          "icon": "🔷",
+          "level": 78
+        },
+        {
+          "name": "React",
+          "icon": "⚛️",
+          "level": 76
+        },
+        {
+          "name": "Vue 2 / Element UI",
+          "icon": "💚",
+          "level": 74
+        },
+        {
+          "name": "Tailwind CSS",
+          "icon": "🌬️",
+          "level": 82
+        }
+      ]
+    },
+    {
+      "group": "后端与数据",
+      "desc": "能独立把接口写到可联调的程度",
+      "items": [
+        {
+          "name": "Java / Spring Boot",
+          "icon": "☕",
+          "level": 70
+        },
+        {
+          "name": "MyBatis",
+          "icon": "🧩",
+          "level": 70
+        },
+        {
+          "name": "MySQL",
+          "icon": "🗄️",
+          "level": 76
+        },
+        {
+          "name": "RESTful 接口设计",
+          "icon": "🔌",
+          "level": 72
+        }
+      ]
+    },
+    {
+      "group": "工程化",
+      "desc": "从写代码到交付上线的一条链路",
+      "items": [
+        {
+          "name": "Vite / 构建配置",
+          "icon": "⚡",
+          "level": 74
+        },
+        {
+          "name": "Git / GitHub",
+          "icon": "🌿",
+          "level": 80
+        },
+        {
+          "name": "Chrome 扩展 (MV3)",
+          "icon": "🧱",
+          "level": 72
+        },
+        {
+          "name": "静态站部署",
+          "icon": "🚀",
+          "level": 70
+        }
+      ]
+    },
+    {
+      "group": "方法与工具",
+      "desc": "决定产出质量的部分，比工具本身更重要",
+      "items": [
+        {
+          "name": "需求拆解与 PRD 撰写",
+          "icon": "📝",
+          "level": 85
+        },
+        {
+          "name": "AI 辅助编程",
+          "icon": "🤖",
+          "level": 88
+        },
+        {
+          "name": "浏览器调试与排错",
+          "icon": "🔍",
+          "level": 80
+        },
+        {
+          "name": "Figma / 设计还原",
+          "icon": "🖌️",
+          "level": 62
+        }
+      ]
+    }
+  ],
+  "projects": [
+    {
+      "slug": "image-grab",
+      "title": "电商图片提取插件",
+      "summary": "在淘宝、京东、拼多多商品详情页一键抓取全部图片，新标签页勾选后批量保存为 PNG。",
+      "year": "2026.10",
+      "role": "独立完成 / 需求、开发、调试、部署",
+      "cover": "linear-gradient(135deg, #1e1b4b 0%, #4338ca 55%, #0891b2 100%)",
+      "glyph": "🖼️",
+      "tags": [
+        "Chrome MV3",
+        "JavaScript",
+        "Canvas",
+        "跨域调试"
+      ],
+      "links": [
+        {
+          "label": "源码仓库",
+          "href": "https://github.com/Gilmmerr/image-grab"
+        }
+      ],
+      "background": "运营与美工从商品详情页取图，通常只能逐张右键另存，遇到懒加载的图还得先滚到底，取下来的 WebP / JPG 混在一起，还要再转一次格式。这个插件把这一段压成「点一次按钮」。",
+      "approach": [
+        "Manifest V3 拆成四层：content 负责判定详情页与采集，background 负责消息中转与下载调度，gallery 负责新标签页的展示与勾选，manifest 只声明权限与匹配规则。",
+        "详情页判定用三级模型：URL 正则 → 结构判据（og:type、主图容器）→ 兜底（图片数量与尺寸），避免平台改版或列表页误判。",
+        "采集不按平台写 if-else，而是按属性清单轮询：currentSrc → src → data-src → data-original → data-lazy-src …，取到即停，新增平台只需加属性名。",
+        "边滚边采：每步 0.8 屏、间隔 120ms、总时长上限 8 秒，解决虚拟列表滚过即回收导致漏图的问题。",
+        "图片按 CDN 规则归一化去重：剥离 _800x800Q90、s100x100_jfs、?imageView2 一类尺寸后缀，同一张主图只留一份。",
+        "转 PNG 走 createImageBitmap → OffscreenCanvas → convertToBlob，绘制前先填白底，避免透明图变黑。"
+      ],
+      "challenges": [
+        {
+          "title": "只能抓到首屏十几张",
+          "detail": "第一版直接扫 document.images，拿到的基本是占位图。原因是详情页图片走懒加载，未进入视口时真实地址只存在 data-src 里。改为自动分段滚动并在滚动过程中增量采集后解决。"
+        },
+        {
+          "title": "预览页图片大面积裂开",
+          "detail": "图片 CDN 校验 Referer，非本站来源直接 403。展示层加 referrerpolicy=\"no-referrer\" 并补齐 host_permissions 后恢复；仍然失败的图保留占位但保留勾选状态，不影响批量下载。"
+        },
+        {
+          "title": "下载下来打不开",
+          "detail": "直接把原图地址交给 chrome.downloads，只会改扩展名，不会真的转码。改为在预览页用 Canvas 重绘后导出 blob，再把 blob URL 交给下载接口。"
+        },
+        {
+          "title": "Service Worker 会休眠",
+          "detail": "MV3 的 background 空闲即回收，内存里的采集结果会丢。全部状态改存 storage.session，并且不在 SW 里调用 URL.createObjectURL（那里没有这个 API），blob URL 一律在预览页创建后把字符串传回。"
+        }
+      ],
+      "outcome": "三个平台的商品详情页都能一次取到全部主图与详情切片，勾选后批量得到真正的 PNG 文件。代码托管在 GitHub，需求与方案文档随仓库一起维护。"
+    },
+    {
+      "slug": "student-manager",
+      "title": "学生管理系统",
+      "summary": "学生、课程、专业三张核心表的完整管理系统，Vue + Element UI 前端，Spring Boot + MyBatis 后端。",
+      "year": "2026.09",
+      "role": "独立完成 / 数据库设计、后端接口、前端页面",
+      "cover": "linear-gradient(135deg, #0f172a 0%, #134e4a 55%, #065f46 100%)",
+      "glyph": "🗂️",
+      "tags": [
+        "Vue 2",
+        "Element UI",
+        "Spring Boot",
+        "MyBatis",
+        "MySQL"
+      ],
+      "links": [],
+      "background": "数据库课程的综合作业，要求把课上讲的表设计、视图、存储函数、用户权限落到一个能跑的完整系统上，而不是只交一堆 SQL 语句。",
+      "approach": [
+        "三张核心表：学生（register_no 主键，s_name / s_gender 等下划线命名）、课程（course_no、credit、term_no、major_no、course_type）、专业（major_no、major_name）。",
+        "课程与专业的「编号」「名称」在接口层作为独立查询参数，前端下拉框按编号取值、按名称展示，避免只传名称导致重名匹配错误。",
+        "统一命名转换：数据库下划线 → 后端驼峰 → 前端表单字段，转换只在一处做，避免字段错位这类最难查的问题。",
+        "前端表格展示全部数据库列，不做人为隐藏，保证和表结构一一对应；分页与条件查询走服务端。",
+        "用视图封装多表关联查询，用存储函数处理业务计算，再用独立的数据库用户做最小权限授权。"
+      ],
+      "challenges": [
+        {
+          "title": "字段名对不上导致保存失败",
+          "detail": "数据库是 s_name，前端表单提交的字段名不一致，后端接收后为 null。做法是：接口文档里固定字段契约，前端提交前统一转换，后端 DTO 显式映射，不再依赖框架的自动驼峰。"
+        },
+        {
+          "title": "表格列比数据库列少",
+          "detail": "最初前端只挑了常用的几列展示，验收时对不上表结构。改为按表结构逐列渲染，缺数据的单元格显示占位符而不是隐藏该列。"
+        },
+        {
+          "title": "课程与专业只能按名称查",
+          "detail": "编号被当成名称的附属字段，导致同名课程无法区分。把编号提升为独立查询参数，列表与详情都支持按编号精确定位。"
+        }
+      ],
+      "outcome": "系统可完成三类实体的增删改查、条件筛选与关联查询，数据库部分覆盖了视图、存储函数与用户授权，作为课程综合作业通过验收。"
+    },
+    {
+      "slug": "watermark-tool",
+      "title": "图片水印助手",
+      "summary": "浏览器内完成批量加水印，支持文字与图片两种模式、五处预留位置、实时预览与批量导出。",
+      "year": "2026.06",
+      "role": "独立完成 / 交互设计与实现",
+      "cover": "linear-gradient(135deg, #172554 0%, #1d4ed8 50%, #7c3aed 100%)",
+      "glyph": "💧",
+      "tags": [
+        "Canvas",
+        "批量处理",
+        "本地计算"
+      ],
+      "links": [],
+      "background": "给图片加水印的工具大多要求上传到服务器，涉及原图外流的风险。这个应用全程在浏览器本地处理，图片不离开设备。",
+      "approach": [
+        "单张与批量两条路径共用一套渲染逻辑，批量时按队列逐张处理并显示进度，单张失败不阻断整批。",
+        "文字水印支持字号、透明度、旋转角度与五处预留位置；图片水印支持缩放与间距平铺。",
+        "实时预览用低分辨率副本渲染，导出时再按原图尺寸重绘，兼顾流畅度与画质。",
+        "批量重置、全屏预览、单张下载与批量导出都做了防重复点击处理。"
+      ],
+      "challenges": [
+        {
+          "title": "大批量处理时页面卡死",
+          "detail": "同步循环解码所有图片会阻塞主线程。改为队列 + 每张之间让出一帧，并在处理完立刻释放 ImageBitmap 与 object URL。"
+        },
+        {
+          "title": "预览与导出效果不一致",
+          "detail": "预览用了缩放后的画布，导出沿用同一尺寸导致清晰度下降。拆成两套尺寸：预览按容器宽高，导出按原图宽高，参数按比例换算。"
+        }
+      ],
+      "outcome": "交付前清除了所有示例残留代码，通过类型检查、代码规范与构建校验，支持文字与图片双模式水印的批量处理。"
+    },
+    {
+      "slug": "personal-site",
+      "title": "个人展示网站",
+      "summary": "就是你正在看的这个站：React + TS + Vite + Tailwind，深色星空主题，纯静态部署。",
+      "year": "2026.10",
+      "role": "独立完成 / 设计、开发、部署",
+      "cover": "linear-gradient(135deg, #0b0f1a 0%, #312e81 55%, #0e7490 100%)",
+      "glyph": "✨",
+      "tags": [
+        "React 18",
+        "TypeScript",
+        "Vite",
+        "Tailwind"
+      ],
+      "links": [
+        {
+          "label": "源码仓库",
+          "href": "https://github.com/Gilmmerr/personal-site"
+        }
+      ],
+      "background": "作品散落在仓库、文档和聊天记录里，对外说明时只能临时拼链接。需要一个能长期维护、改内容成本极低的集中入口。",
+      "approach": [
+        "内容与代码分离：站点信息、技能、项目在 src/data 下的 ts 文件里，博客是 src/content/posts 下的 md，新增文章只放文件。",
+        "文章用 import.meta.glob 以 ?raw 在构建期读入，运行时零请求；frontmatter 手工解析，不引需要 Buffer polyfill 的库。",
+        "路由用 HashRouter + base: \"./\"，任意静态托管的任意子路径都能跑，刷新与直达链接不会 404，不需要配 rewrite。",
+        "星空背景用 Canvas：粒子数按视口宽度分档，页面隐藏时暂停 rAF，尊重 prefers-reduced-motion。",
+        "滚动渐入用 IntersectionObserver + CSS 过渡，不引动画库，产物里没有额外 60KB。"
+      ],
+      "challenges": [
+        {
+          "title": "TOC 点了不跳转",
+          "detail": "目录里的锚点是自己拼的 slug，正文标题则由 react-markdown 渲染，两边算法不一致。改为共用一个 slugify 函数，并用自定义 h2/h3 覆盖渲染输出同一个 id。"
+        },
+        {
+          "title": "中文锚点在 URL 里很难看",
+          "detail": "试过转拼音与编码成 UUID，前者要额外词典、后者无法阅读。最终保留中文字符，只去标点与空格，scrollIntoView 与浏览器都能正常处理。"
+        },
+        {
+          "title": "移动端星空掉帧",
+          "detail": "最初固定 120 颗粒子，手机上明显卡顿。按视口宽度分档（120 / 55），并在 visibilitychange 时暂停动画后恢复。"
+        }
+      ],
+      "outcome": "线上可访问，375 / 768 / 1440 三个宽度无横向滚动，构建产物 gzip 后不足 120KB。"
+    }
+  ],
+  "posts": [
+    {
+      "slug": "docs-before-code",
+      "title": "先写三份文档，再让 AI 动手写代码",
+      "date": "2026-10-24",
+      "tags": [
+        "工程实践",
+        "AI 编程"
+      ],
+      "summary": "PRD、TECH_DESIGN、AGENTS.md 三件套不是流程表演，它决定了第一版代码能不能一次跑对。",
+      "body": "用 AI 写代码，最浪费时间的不是它写错，而是它写对了另一个东西——方向偏了，代码质量再高也得推翻。文档的作用就是把「另一个东西」提前排除掉。\n\n## 一句话说清三份文档的分工\n\n| 文档 | 回答的问题 | 谁最需要它 |\n|---|---|---|\n| `PRD.md` | 做哪些功能，明确不做哪些 | 你自己，防止范围膨胀 |\n| `TECH_DESIGN.md` | 用什么实现，代码怎么组织 | AI，避免它自由发挥选型 |\n| `AGENTS.md` | 有哪些硬性规矩不能破 | 每一次对话，相当于常驻约束 |\n\n三者缺一，问题会以不同形式冒出来：缺 PRD 会越做越大，缺 TECH_DESIGN 会换来换去，缺 AGENTS.md 会每次都要重新交代一遍。\n\n## PRD：先把「不做」写下来\n\n需求文档最容易写错的地方，是只列功能不划边界。比如「个人网站要有博客」，这句话可以做出十种东西：带后台的 CMS、带评论的社区、只读的文章列表。\n\n我的写法是先写一段目标，再用一张表把功能拆到「能验收」的粒度，最后单独一节写**不做的事**：\n\n- 不做注册、评论、点赞；\n- 不接后端数据库；\n- 不做多语言。\n\n这三条写下来，后面所有关于「要不要加个 XX」的讨论都有了裁决依据。AI 也不会热情地给你补一堆用不上的功能。\n\n## TECH_DESIGN：把选型理由写进去\n\n只写「用 React + Vite」不够。真正有用的是**为什么不用别的**：\n\n- 为什么不用 Next.js：没有动态内容，SSR 带来的是构建复杂度而不是收益；\n- 为什么不用组件库：深色定制成本高于手写，产物还更大；\n- 为什么用 HashRouter：纯静态托管没有 rewrite，BrowserRouter 刷新就 404。\n\n把这些写进文档，AI 在后续改动里就不会「好心」帮你换回 BrowserRouter——它知道那是有意为之。\n\n## AGENTS.md：写规矩，不写教程\n\n这份文件的读者是 AI，所以全部用祈使句和禁止项，不要解释概念：\n\n```md\n- TypeScript 严格模式，不使用 any\n- 样式全部走 Tailwind，不新增 .css 文件\n- 路由只集中在 App.tsx 声明\n- 不要引入后端，留言表单是前端演示\n- 提交信息格式：feat: xxx / fix: xxx / docs: xxx\n```\n\n像「代码要整洁」这种话没有信息量，删掉。写「组件文件名 PascalCase，工具文件 camelCase」才有用。\n\n## 一个真实对比\n\n同一个插件项目，第一版我只给了三行需求，结果生成出来的目录结构是「一个 content.js 装下全部逻辑」，八百多行，改一处要读全文。\n\n第二版先花四十分钟写需求拆解与职责划分，再写一句「content.js 只负责采集，不负责下载；background.js 只负责中转与调度，不解码图片」。生成出来的就是六个文件、职责清晰的结构，一次跑通。\n\n四十分钟换一次跑通，很划算。\n\n## 写到什么程度就够\n\n判断标准很简单：**把文档给一个没参与过讨论的人，他能不能照着做出来**。\n\n- 功能能列出验收条件；\n- 技术选型有理由；\n- 目录结构画得出来；\n- 数据长什么样有类型定义。\n\n到这四步就可以停。再往下写就是在替 AI 写代码了，反而限制它的实现空间。\n\n## 什么时候可以不写\n\n脚本、demo、一次性验证想法，直接写。文档的成本要在「会返工」的项目上才收得回来。判断依据是：这个项目你会不会改第二次。会，就写。\n"
+    },
+    {
+      "slug": "image-403-layers",
+      "title": "图片 403 的三层排查法",
+      "date": "2026-10-20",
+      "tags": [
+        "调试",
+        "跨域"
+      ],
+      "summary": "裂图、403、下载失败看着像同一个问题，其实是三层不同的故障，混在一起查只会越改越乱。",
+      "body": "抓页面图片时最容易被绕住的一类问题：图片在页面上看得见，一进到自己的预览页就裂了；或者能显示但下载失败；或者下载下来打不开。表面都是「图片不对」，实际坏在不同的层。\n\n## 先分层，再动手\n\n| 现象 | 出问题的层 | 先查什么 |\n|---|---|---|\n| 预览页全裂，原页面正常 | 展示层 | Referer 校验、CSP |\n| 预览能看，下载 403 | 取字节层 | host_permissions、请求头 |\n| 下载得到文件但打不开 | 转码层 | 是否真的重新编码过 |\n| 部分图裂、部分正常 | 数据层 | URL 归一化、懒加载属性 |\n\n先看现象落在哪一行，再动手。跳过这一步，很容易出现「为了修 403 把下载逻辑改了一遍」这种事。\n\n## 第一层：展示层\n\n最常见的原因是 CDN 校验 `Referer`。浏览器在跨站请求图片时会带上来源页地址，CDN 发现不是自家域名就返回 403。\n\n最低成本的解法是在标签上加属性：\n\n```html\n<img src=\"https://img.alicdn.com/xxx.jpg\" referrerpolicy=\"no-referrer\" />\n```\n\n这一行只影响展示，不解决下载。而且它对某些「连空 Referer 都拒绝」的 CDN 无效，那就得看下一层。\n\n## 第二层：取字节层\n\n浏览器扩展里 `fetch` 图片，能不能绕开 CORS 取决于 `host_permissions`：\n\n```json\n\"host_permissions\": [\"https://*.alicdn.com/*\"]\n```\n\n**权限要写到 CDN 域名，写站点域名没用**——图片根本不在站点服务器上。漏配的典型表现是控制台出现 `ERR_BLOCKED_BY_CLIENT`，容易误判成防盗链。\n\n如果权限配好了还是 403，说明对方要求一个「合法的 Referer」。两条路：\n\n1. 用 `declarativeNetRequest` 在请求头里改 Referer；\n2. 退回页面上下文，用页面自己的 `XMLHttpRequest` 取——页面的 Referer 天然是合法的。\n\n方案 2 更稳但受页面 CSP 限制，方案 1 更干净但要额外声明权限。我一般先用 2 验证，确认有效再换 1。\n\n## 第三层：转码层\n\n这一层的问题最隐蔽：文件下载成功了，大小也对，就是打不开。\n\n原因是 `chrome.downloads.download` 只负责下载，**不会转码**。把 jpg 的 URL 存成 `.png` 只是改了扩展名。\n\n真正的转换要做三件事：\n\n```js\nconst bitmap = await createImageBitmap(blob)\nconst canvas = new OffscreenCanvas(bitmap.width, bitmap.height)\nconst ctx = canvas.getContext('2d')\nctx.fillStyle = '#ffffff'      // 透明底填白，否则变黑\nctx.fillRect(0, 0, canvas.width, canvas.height)\nctx.drawImage(bitmap, 0, 0)\nconst png = await canvas.convertToBlob({ type: 'image/png' })\nbitmap.close()                  // 及时释放，批量处理容易 OOM\n```\n\n验证方式很简单：下载一张图，用图片查看器打开，看文件头是不是 PNG。别只看文件名。\n\n## 顺带一个数据层的问题\n\n「部分图裂、部分正常」通常是同一个原因的不同表现：URL 没归一化。\n\n同一张主图在页面里可能有多个尺寸：\n\n```\nhttps://img.alicdn.com/imgextra/i1/xxx_100x100.jpg\nhttps://img.alicdn.com/imgextra/i1/xxx_800x800Q90.jpg\nhttps://img.alicdn.com/imgextra/i1/xxx.jpg\n```\n\n抓的时候三条都进了列表，去重失败，还混进一堆缩略图。做法是剥离尺寸后缀再比较：\n\n```js\nconst normalize = (url) =>\n  url.replace(/_\\d+x\\d+(Q\\d+)?\\.(jpg|png|webp)$/i, '.$2')\n     .replace(/\\/s\\d+x\\d+_jfs\\//, '/jfs/')\n```\n\n不同 CDN 规则不同，但思路一致：**先归一化，再判断是否重复**。\n\n## 一点经验\n\n排查这类问题，最有效的一步是「先定位到层」，而不是先想解法。想解法的时候你会同时改三个地方，改完不知道哪一步起了作用；定位到层之后，每次只动一处，结果就是确定的。\n"
+    },
+    {
+      "slug": "mv3-extension-notes",
+      "title": "MV3 插件踩坑：Service Worker、跨域与 Canvas 转 PNG",
+      "date": "2026-10-27",
+      "tags": [
+        "Chrome 扩展",
+        "调试"
+      ],
+      "summary": "写图片下载插件时踩到的五个坑，每一个都能让功能「看起来正常但结果不对」。",
+      "body": "Manifest V3 把 background 从常驻页面换成了 Service Worker，很多写法就跟着变了。下面五个坑都是我在图片提取插件里真实撞到的，按踩到的顺序写。\n\n## 一、Service Worker 会休眠，内存变量靠不住\n\nMV3 的 background 空闲几十秒就会被回收。把采集结果存在模块级变量里，用户切个标签页回来就没了。\n\n```js\n// 错：重启就丢\nlet collected = []\n\n// 对：放 storage.session\nawait chrome.storage.session.set({ collected })\nconst { collected } = await chrome.storage.session.get('collected')\n```\n\n`storage.session` 在浏览器会话内有效，正好符合「这次采集的结果」这个生命周期。\n\n## 二、Service Worker 里没有 URL.createObjectURL\n\n预览页要把图片转成 PNG 再交给下载接口，很自然会想在 background 里创建 blob URL——那里没有 DOM，也就没有 `URL.createObjectURL`。\n\n正确做法是**在预览页创建 blob URL，把字符串传给 background**：\n\n```js\n// gallery.js（有 DOM 的页面）\nconst blob = await canvas.convertToBlob({ type: 'image/png' })\nconst url = URL.createObjectURL(blob)\nawait chrome.runtime.sendMessage({ type: 'download', url, filename })\n```\n\n注意这个 URL 的作用域绑定在创建它的页面。预览页一关，URL 就失效，所以下载要在页面还活着的时候发起。\n\n## 三、chrome.downloads 不会帮你转格式\n\n这是最隐蔽的一个。把 jpg 的地址传给 `chrome.downloads.download` 并指定 `.png` 文件名，下载下来确实是 `.png`——但里面还是 jpg 的字节，双击打不开。\n\n```js\n// 只是改了扩展名\nchrome.downloads.download({ url: jpgUrl, filename: 'image.png' })\n```\n\n真正的转换必须在 Canvas 里做：\n\n```js\nconst bitmap = await createImageBitmap(blob)\nconst canvas = new OffscreenCanvas(bitmap.width, bitmap.height)\nconst ctx = canvas.getContext('2d')\nctx.fillStyle = '#ffffff' // 透明底必须填白，否则变黑\nctx.fillRect(0, 0, canvas.width, canvas.height)\nctx.drawImage(bitmap, 0, 0)\nconst png = await canvas.convertToBlob({ type: 'image/png' })\nbitmap.close() // 大图不释放会 OOM\n```\n\n两个细节：`fillRect` 那一步不能省，PNG 透明区域在部分查看器里会渲染成黑色；`bitmap.close()` 也要调，批量处理几十张大图时内存涨得很快。\n\n## 四、跨域：先把权限写够\n\n扩展页 `fetch` 图片不受 CORS 限制的前提是 `host_permissions` 覆盖了目标域名。只写站点域名不够，图片在 CDN 上：\n\n```json\n\"host_permissions\": [\n  \"https://*.alicdn.com/*\",\n  \"https://*.360buyimg.com/*\",\n  \"https://*.pddpic.com/*\"\n]\n```\n\n漏了 CDN，表现是预览页图片一片裂开，控制台报 `net::ERR_BLOCKED_BY_CLIENT` 或 403，很容易误判成防盗链。\n\n## 五、防盗链挡的是 Referer，不是 IP\n\n有些 CDN 校验 `Referer`。展示层加一行就能过：\n\n```html\n<img src=\"...\" referrerpolicy=\"no-referrer\">\n```\n\n取字节时如果还是 403，就得在请求头层面处理（`declarativeNetRequest` 改 Referer），或者退回页面上下文用 `XMLHttpRequest` 发请求——页面自己的 Referer 通常是被允许的。\n\n## 小结\n\n这五个坑有个共同点：**都不会报错**。功能看着跑通了，结果是丢数据、坏文件、裂图。所以写完一定要验证产物本身——下载下来的图能不能打开、尺寸对不对、数量对不对——而不是看控制台有没有红字。\n"
+    },
+    {
+      "slug": "why-hash-router",
+      "title": "静态站部署，为什么我最后选了 HashRouter",
+      "date": "2026-10-28",
+      "tags": [
+        "前端工程",
+        "部署"
+      ],
+      "summary": "刷新就 404、子路径部署白屏——这两个问题都能靠一个路由模式的选择消掉，代价只是 URL 里多一个井号。",
+      "body": "个人网站上线后第一件事通常是发给别人看。然后就会收到一句：「你发的那个链接打不开，白屏。」\n\n这是单页应用部署在纯静态托管上的典型问题，而且和你写得好不好没关系。\n\n## 问题从哪来\n\n单页应用只有一个 `index.html`，`/blog/xxx` 这种路径在前端是路由，在服务器上却是「去找一个不存在的文件」。用户直接在地址栏回车，或者刷新页面，服务器返回 404。\n\n## 三种解法\n\n| 方案 | 做法 | 代价 |\n|---|---|---|\n| 服务端 rewrite | 配置所有路径回落到 `index.html` | 每个平台配置都不一样，换平台要重配 |\n| BrowserRouter + 404 hack | 复制 `index.html` 为 `404.html` | 需要构建后处理，且回落后 URL 语义混乱 |\n| HashRouter | 路由放在 `#` 后面，服务器只请求 `/` | URL 里带一个 `#` |\n\n我选了第三种。原因很直接：这个站点不需要 SEO 友好的路径，也不需要被别人以「深链接」的方式引用到具体文章以外的地方。\n\n## HashRouter 解决了什么\n\n服务器眼里，`https://example.com/#/blog/mv3-extension-notes` 就是请求 `https://example.com/`，永远命中 `index.html`。所以：\n\n- 刷新不 404；\n- 直接粘贴链接给别人，对方能打开；\n- 部署到任意子路径（比如 `https://example.com/portfolio/`）也能跑；\n- 换托管平台不用改任何配置。\n\n配合 Vite 的 `base: './'`，产物里所有资源都是相对路径，连子目录都不用管：\n\n```ts\nexport default defineConfig({\n  base: './',\n  build: { outDir: 'dist' },\n})\n```\n\n## 代价是什么\n\n**URL 里多一个 `#`。** 有些场合不希望看到它，比如要对外宣传的落地页、或者需要搜索引擎收录的内容页。\n\n还有一个更实际的坑：**页面内的锚点跳转会失效**。传统写法 `<a href=\"#section\">` 在 HashRouter 下会被当成一次路由跳转，直接把页面导航到 `/section`，报 404。\n\n解决办法是放弃 `href=\"#id\"`，改用方法调用：\n\n```tsx\n<button onClick={() => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })}>\n  跳到章节\n</button>\n```\n\n配合标题上的 `scroll-margin-top`，滚动后不会被吸顶导航挡住：\n\n```css\n.prose h2 { scroll-margin-top: 7rem; }\n```\n\n我的博客目录就是这么实现的——看起来是锚点跳转，实际一次路由都没触发。\n\n## 什么时候别用\n\n需要满足下面任一条，就老老实实用 BrowserRouter 加 rewrite：\n\n- 页面要被搜索引擎收录，且路径要干净；\n- 需要对外的短链接（`/p/abc` 比 `/#/p/abc` 好看）；\n- 已经有一套成熟的部署流程，配置 rewrite 不构成负担。\n\n换句话说，HashRouter 是**在「部署配置成本」和「URL 美观度」之间选了前者**。个人站、内部工具、原型演示，这个交换通常划算；对外产品则相反。\n\n## 小结\n\n路由模式不是风格偏好，是部署方式的约束。先确定「托管在哪、能不能配 rewrite」，再决定用哪个路由——顺序反了，就要在上线前一晚改全局代码。\n"
+    }
+  ]
+}
