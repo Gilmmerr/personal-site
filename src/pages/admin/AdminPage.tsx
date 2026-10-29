@@ -158,14 +158,25 @@ export function AdminPage() {
 
   const [saving, setSaving] = useState(false)
 
+  // 只有读到数据库才允许写；静态部署（GitHub Pages / 预览域名）没有后端，点保存必然 405
+  const canWrite = source === 'database'
+
   /** 保存 = 整份内容 PUT 到 Spring Boot，再写进 MySQL */
   const onSave = useCallback(async () => {
     if (saving) return
+    if (!canWrite) {
+      setToast({
+        text: '当前是静态部署，没有后端可写。请在 http://127.0.0.1:5180/#/admin 修改，改完重新构建发布',
+        tone: 'warn',
+        id: Date.now(),
+      })
+      return
+    }
     setSaving(true)
     const result = await saveContent(draft)
     setSaving(false)
     setToast({ text: result.message, tone: result.ok ? 'ok' : 'warn', id: Date.now() })
-  }, [draft, saving])
+  }, [draft, saving, canWrite])
 
   // Ctrl/Cmd + S 保存
   useEffect(() => {
@@ -240,7 +251,12 @@ export function AdminPage() {
             >
               预览站点
             </a>
-            <Btn variant="primary" onClick={() => void onSave()} disabled={!dirty || saving}>
+            <Btn
+              variant="primary"
+              onClick={() => void onSave()}
+              disabled={!dirty || saving || !canWrite}
+              title={canWrite ? '' : '静态部署没有后端，保存不会写库'}
+            >
               {saving ? '保存中…' : '保存'}
             </Btn>
             <Btn
@@ -283,8 +299,8 @@ export function AdminPage() {
         <div className="mx-auto max-w-[1320px] px-5 pt-4">
           <div className="rounded-xl border border-amber-400/25 bg-amber-400/[0.07] px-4 py-3 text-[12px] leading-relaxed text-amber-200/85">
             {apiReachable
-              ? '当前读到的是静态内容，不是数据库。'
-              : '没连上后端，界面显示的是静态兜底内容，保存会失败。先在项目根目录执行 npm run api 启动 Spring Boot，再刷新本页。'}
+              ? '当前读到的是静态内容，不是数据库；在这里保存不会写库。改内容请在 http://127.0.0.1:5180/#/admin 操作，改完重新构建发布。'
+              : '没连上后端，界面显示的是静态兜底内容，保存会失败。这个地址（静态托管）没有后端，请先在本机执行 npm run api 启动 Spring Boot，再用 http://127.0.0.1:5180/#/admin。'}
           </div>
         </div>
       )}

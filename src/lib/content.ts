@@ -285,6 +285,15 @@ export interface SaveResult {
   content?: Content
 }
 
+/** 静态托管没有后端时，保存会拿到 404/405，这类状态码单独给一句能照做的话 */
+function explainStatus(status: number): string {
+  if (status === 404 || status === 405) {
+    return '这个地址没有后端（静态部署），保存不会生效。请打开 http://127.0.0.1:5180/#/admin 修改'
+  }
+  if (status >= 500) return `后端写库失败（HTTP ${status}），先看后端控制台日志`
+  return `保存失败（HTTP ${status}）`
+}
+
 /** 保存到数据库：成功后全站立即读到新内容 */
 export async function saveContent(next: Content): Promise<SaveResult> {
   try {
@@ -295,8 +304,12 @@ export async function saveContent(next: Content): Promise<SaveResult> {
     })
 
     if (!response.ok) {
+      if (response.status === 404 || response.status === 405) {
+        setState({ apiReachable: false })
+        return { ok: false, message: explainStatus(response.status) }
+      }
       const detail = (await response.json().catch(() => null)) as { message?: string } | null
-      return { ok: false, message: detail?.message ?? `保存失败（HTTP ${response.status}）` }
+      return { ok: false, message: detail?.message ?? explainStatus(response.status) }
     }
 
     const saved = normalizeContent((await response.json()) as unknown)
@@ -314,7 +327,7 @@ export async function resetContent(): Promise<SaveResult> {
     const response = await fetch(`${DRAFT_ENDPOINT}/reset`, { method: 'POST' })
     if (!response.ok) {
       const detail = (await response.json().catch(() => null)) as { message?: string } | null
-      return { ok: false, message: detail?.message ?? `重置失败（HTTP ${response.status}）` }
+      return { ok: false, message: detail?.message ?? explainStatus(response.status) }
     }
     const reset = normalizeContent((await response.json()) as unknown)
     setState({ content: reset, source: 'database', ready: true, apiReachable: true })
