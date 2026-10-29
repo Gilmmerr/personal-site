@@ -6,11 +6,13 @@ import { Projects } from '../components/Projects'
 import { Contact } from '../components/Contact'
 import { SectionHeading } from '../components/SectionHeading'
 import { Icon } from '../components/Icon'
-import { formatDate, posts } from '../lib/posts'
+import { formatDate } from '../lib/posts'
+import { useContent } from '../lib/content'
 import { useReveal } from '../lib/useReveal'
 
 export function Home() {
   useReveal()
+  const { posts } = useContent()
   const latest = posts.slice(0, 3)
 
   return (

@@ -18,6 +18,16 @@ export interface Post extends PostMeta {
   toc: TocItem[]
 }
 
+/** 可被后台编辑的文章原始数据（不含推导出来的目录与阅读时长） */
+export interface ContentPost {
+  slug: string
+  title: string
+  date: string
+  tags: string[]
+  summary: string
+  body: string
+}
+
 /** 标题转锚点：保留中英文与数字，去掉 markdown 标记与标点 */
 export function slugify(text: string): string {
   return text
@@ -52,7 +62,7 @@ function parseFrontmatter(raw: string): { data: Record<string, string>; body: st
 }
 
 /** 从正文里提取二级、三级标题（跳过代码块内的 # 行） */
-function extractToc(body: string): TocItem[] {
+export function extractToc(body: string): TocItem[] {
   const items: TocItem[] = []
   let inFence = false
 
@@ -73,7 +83,8 @@ function extractToc(body: string): TocItem[] {
   return items
 }
 
-function countReadingTime(body: string): number {
+/** 粗略估算阅读时长：按 420 字/分钟 */
+export function countReadingTime(body: string): number {
   const chars = body.replace(/\s/g, '').length
   return Math.max(1, Math.round(chars / 420))
 }
@@ -84,38 +95,47 @@ const modules = import.meta.glob('../content/posts/*.md', {
   eager: true,
 }) as Record<string, string>
 
-export const posts: Post[] = Object.entries(modules)
-  .map(([path, raw]) => {
-    const slug = path.split('/').pop()!.replace(/\.md$/, '')
-    const { data, body } = parseFrontmatter(raw)
-    return {
-      slug,
-      title: data.title ?? slug,
-      date: data.date ?? '2026-01-01',
-      tags: (data.tags ?? '')
-        .split(/[,，]/)
-        .map((t) => t.trim())
-        .filter(Boolean),
-      summary: data.summary ?? '',
-      readingTime: countReadingTime(body),
-      body,
-      toc: extractToc(body),
-    }
-  })
-  .sort((a, b) => (a.date < b.date ? 1 : -1))
+/** 构建期读入的默认文章，作为内容层的初始数据 */
+export const defaultPostSource: ContentPost[] = Object.entries(modules).map(([path, raw]) => {
+  const slug = path.split('/').pop()!.replace(/\.md$/, '')
+  const { data, body } = parseFrontmatter(raw)
+  return {
+    slug,
+    title: data.title ?? slug,
+    date: data.date ?? '2026-01-01',
+    tags: (data.tags ?? '')
+      .split(/[,，]/)
+      .map((t) => t.trim())
+      .filter(Boolean),
+    summary: data.summary ?? '',
+    body,
+  }
+})
 
-export function getPost(slug: string): Post | undefined {
-  return posts.find((p) => p.slug === slug)
+/** 由原始数据推导出渲染所需的完整文章（目录、阅读时长） */
+export function buildPost(input: ContentPost): Post {
+  return {
+    ...input,
+    readingTime: countReadingTime(input.body),
+    toc: extractToc(input.body),
+  }
 }
 
-export function getPostNeighbors(slug: string): { prev?: Post; next?: Post } {
-  const index = posts.findIndex((p) => p.slug === slug)
-  if (index === -1) return {}
-  return { prev: posts[index + 1], next: posts[index - 1] }
+export function sortPosts(posts: Post[]): Post[] {
+  return [...posts].sort((a, b) => (a.date < b.date ? 1 : -1))
 }
 
 export function formatDate(date: string): string {
   const [y, m, d] = date.split('-')
   if (!y || !m || !d) return date
   return `${y}.${m}.${d}`
+}
+
+/** 由标题生成一个不与现有文章冲突的 slug */
+export function uniqueSlug(base: string, taken: string[]): string {
+  const seed = slugify(base) || 'post'
+  if (!taken.includes(seed)) return seed
+  let index = 2
+  while (taken.includes(`${seed}-${index}`)) index += 1
+  return `${seed}-${index}`
 }

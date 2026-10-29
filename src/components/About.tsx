@@ -1,7 +1,9 @@
-import { site } from '../data/site'
+import { useContent } from '../lib/content'
 import { SectionHeading } from './SectionHeading'
 
 export function About() {
+  const { site } = useContent()
+
   return (
     <section id="about" className="scroll-mt-24 py-24">
       <div className="wrap">
@@ -26,12 +28,7 @@ export function About() {
             ))}
 
             <div className="!mt-8 grid gap-3 sm:grid-cols-2">
-              {[
-                { label: '当前方向', value: '前端开发 / 全栈' },
-                { label: '可投入时间', value: '全职实习' },
-                { label: '常用工具', value: 'VS Code · Vite · WorkBuddy' },
-                { label: '联系方式', value: site.email },
-              ].map((item) => (
+              {site.facts.map((item) => (
                 <div key={item.label} className="rounded-xl border border-white/[0.07] bg-white/[0.02] px-4 py-3">
                   <p className="text-[11px] uppercase tracking-wider text-paper/35">{item.label}</p>
                   <p className="mt-1 truncate text-[13px] text-paper/75">{item.value}</p>

@@ -1,7 +1,10 @@
-import { site } from '../data/site'
+import { Link } from 'react-router-dom'
+import { useContent } from '../lib/content'
 import { Icon } from './Icon'
 
 export function Footer() {
+  const { site } = useContent()
+
   return (
     <footer className="relative border-t border-white/[0.07] py-10">
       <div className="wrap flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
@@ -36,6 +39,15 @@ export function Footer() {
             <Icon name="arrow-up" size={14} />
             回到顶部
           </button>
+          <Link
+            to="/admin"
+            title="内容管理"
+            aria-label="进入内容管理后台"
+            className="inline-flex items-center gap-1.5 rounded-full border border-white/[0.07] px-3.5 py-2 text-xs text-paper/30 transition-colors hover:border-white/20 hover:text-paper/80"
+          >
+            <Icon name="settings" size={14} />
+            后台
+          </Link>
         </div>
       </div>
     </footer>

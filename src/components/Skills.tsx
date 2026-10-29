@@ -1,7 +1,9 @@
-import { skillGroups } from '../data/skills'
+import { useContent } from '../lib/content'
 import { SectionHeading } from './SectionHeading'
 
 export function Skills() {
+  const { skillGroups } = useContent()
+
   return (
     <section id="skills" className="scroll-mt-24 py-24">
       <div className="wrap">

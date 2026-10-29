@@ -12,6 +12,8 @@ const ProjectDetail = lazy(() =>
 )
 const BlogList = lazy(() => import('./pages/BlogList').then((m) => ({ default: m.BlogList })))
 const BlogPost = lazy(() => import('./pages/BlogPost').then((m) => ({ default: m.BlogPost })))
+// 后台管理台只在访问 #/admin 时才下载，不影响访客的首屏体积
+const AdminPage = lazy(() => import('./pages/admin/AdminPage').then((m) => ({ default: m.AdminPage })))
 
 function ScrollToTop() {
   const { pathname } = useLocation()
@@ -29,9 +31,10 @@ function RouteFallback() {
   )
 }
 
-export function App() {
+/** 站点外壳：星空背景 + 导航 + 页脚，后台不走这一层 */
+function SiteShell() {
   return (
-    <HashRouter>
+    <>
       <Starfield />
       <div className="relative z-10 flex min-h-screen flex-col">
         <Navbar />
@@ -49,6 +52,24 @@ export function App() {
         <Footer />
       </div>
       <ScrollToTop />
+    </>
+  )
+}
+
+export function App() {
+  return (
+    <HashRouter>
+      <Routes>
+        <Route
+          path="/admin"
+          element={
+            <Suspense fallback={<RouteFallback />}>
+              <AdminPage />
+            </Suspense>
+          }
+        />
+        <Route path="*" element={<SiteShell />} />
+      </Routes>
     </HashRouter>
   )
 }

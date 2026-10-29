@@ -1,5 +1,6 @@
 import { Link } from 'react-router-dom'
-import { projects, type Project } from '../data/projects'
+import type { Project } from '../data/projects'
+import { useContent } from '../lib/content'
 import { coverTexture } from '../lib/ui'
 import { SectionHeading } from './SectionHeading'
 import { Icon } from './Icon'
@@ -73,6 +74,8 @@ export function ProjectCard({ project, featured = false, index }: CardProps) {
 }
 
 export function Projects() {
+  const { projects } = useContent()
+
   return (
     <section id="projects" className="scroll-mt-24 py-24">
       <div className="wrap">

@@ -1,10 +1,13 @@
 import { Link } from 'react-router-dom'
-import { formatDate, posts } from '../lib/posts'
+import { formatDate } from '../lib/posts'
+import { useContent } from '../lib/content'
 import { Icon } from '../components/Icon'
 import { useReveal } from '../lib/useReveal'
 
 export function BlogList() {
   useReveal()
+  const { posts } = useContent()
+
   return (
     <div className="pb-24 pt-28">
       <div className="wrap">

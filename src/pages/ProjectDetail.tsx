@@ -1,5 +1,5 @@
 import { Link, useParams } from 'react-router-dom'
-import { getProject, projects } from '../data/projects'
+import { useContent } from '../lib/content'
 import { Icon } from '../components/Icon'
 import { coverTexture } from '../lib/ui'
 import { useReveal } from '../lib/useReveal'
@@ -7,7 +7,8 @@ import { NotFound } from './NotFound'
 
 export function ProjectDetail() {
   const { slug } = useParams<{ slug: string }>()
-  const project = slug ? getProject(slug) : undefined
+  const { projects } = useContent()
+  const project = slug ? projects.find((item) => item.slug === slug) : undefined
   useReveal()
 
   if (!project) return <NotFound />

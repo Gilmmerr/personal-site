@@ -1,8 +1,10 @@
-import { site } from '../data/site'
+import { useContent } from '../lib/content'
 import { scrollToSection } from '../lib/scroll'
 import { Icon } from './Icon'
 
 export function Hero() {
+  const { site } = useContent()
+
   return (
     <section id="home" className="relative flex min-h-[calc(100vh-4rem)] scroll-mt-24 items-center pb-24 pt-32">
       <div className="wrap grid items-center gap-14 lg:grid-cols-[1.08fr_0.92fr]">

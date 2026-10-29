@@ -38,19 +38,22 @@ npm run preview      # 预览 dist/ 产物
 ## 四、目录结构与职责
 
 ```
-src/data/        内容数据（站点信息、技能、项目）——改内容改这里
+src/data/        默认内容（站点信息、技能、项目）——只作为兜底，不直接被组件引用
 src/content/     博客 Markdown——新增文章只放文件，不改代码
-src/lib/         纯函数与 hook（文章解析、滚动渐入）
+src/lib/         纯函数与 hook（内容层 content.ts、文章解析、滚动渐入）
 src/components/  可复用区块组件
 src/pages/       路由页面（Home / ProjectDetail / BlogList / BlogPost）
+src/pages/admin/ 内容管理台（只在 #/admin 时按需加载）
 src/index.css    Tailwind 指令 + 全局样式 + 代码高亮主题
 ```
 
 约束：
 
-- `components/` 里不写死内容，数据一律从 `data/` 或 props 拿；
+- **内容一律通过 `useContent()` 获取**（`src/lib/content.ts`），组件里不要再 `import { site } from '../data/site'`——否则后台改完内容，那一块不会更新；
+- `components/` 里不写死内容，数据一律从 `useContent()` 或 props 拿；
 - `lib/` 保持无副作用，不引 React 之外的依赖（hook 除外）；
-- 路由只集中在 `App.tsx` 里声明。
+- 路由只集中在 `App.tsx` 里声明；后台路由单独挂，不要套星空与页脚；
+- 后台表单只改 `draft` 副本，落盘统一走 `saveDraft()`，不要在面板里直接写 localStorage。
 
 ## 五、代码风格
 
@@ -80,13 +83,17 @@ src/index.css    Tailwind 指令 + 全局样式 + 代码高亮主题
 3. 移动端汉堡菜单能开合，点击菜单项后自动关闭；
 4. 新增或修改的链接可点击且不 404（项目 slug 与文章文件名对应）；
 5. 博客详情页 TOC 点击能跳到对应标题；
-6. 弱网 / 刷新后直接访问 `/#/blog/xxx` 仍能正常渲染。
+6. 弱网 / 刷新后直接访问 `/#/blog/xxx` 仍能正常渲染；
+7. 后台：在 `/#/admin` 改一处文案并保存，回首页能立即看到；点「清除本地草稿」能回到默认内容；
+8. 后台：`/#/admin?tab=projects` 这种带参数的地址刷新后仍停在对应模块。
 
 ## 八、注意事项
 
-- **不要引入后端**。留言表单是前端演示，提交后只做本地存储与提示，不得写成「已发送」；
-- **不要改路由模式**。HashRouter 是部署零配置的前提，改成 BrowserRouter 会导致刷新 404；
-- **不要在组件里写死个人信息**。姓名、邮箱、社交链接一律从 `src/data/site.ts` 读；
+- **不要引入后端**。留言表单是前端演示，提交后只做本地存储与提示，不得写成「已发送」；后台同理，不得为此引入 Express / 数据库；
+- **不要改路由模式**。HashRouter 是部署零配置的前提，改成 BrowserRouter 会导致刷新 404；后台口令校验也只是前端逻辑，不要写成「安全登录」；
+- **不要在组件里写死个人信息**。姓名、邮箱、社交链接一律从 `useContent()` 读；
+- **不要绕过内容层写 localStorage**。键名 `personal-site:content:draft` 只由 `lib/content.ts` 读写，其他地方直接用会导致状态不同步；
+- **后台面板保持深色 + 同一套 token**，不要引入浅色主题或组件库；
 - **不要删除 `prefers-reduced-motion` 分支**。关掉它会让开启无障碍选项的用户看到无谓动画；
 - 修改 `PRD.md` 或 `TECH_DESIGN.md` 时同步更新本文件中的技术栈与目录说明；
 - 提交信息用中文，格式 `feat: xxx` / `fix: xxx` / `docs: xxx`。

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { site } from '../data/site'
+import { useContent } from '../lib/content'
 import { SectionHeading } from './SectionHeading'
 import { Icon } from './Icon'
 
@@ -12,6 +12,7 @@ interface FormState {
 const emptyForm: FormState = { name: '', email: '', message: '' }
 
 export function Contact() {
+  const { site } = useContent()
   const [form, setForm] = useState<FormState>(emptyForm)
   const [errors, setErrors] = useState<Partial<Record<keyof FormState, string>>>({})
   const [sent, setSent] = useState(false)

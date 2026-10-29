@@ -11,6 +11,7 @@ type IconName =
   | 'close'
   | 'download'
   | 'pin'
+  | 'settings'
 
 const paths: Record<IconName, string> = {
   github:
@@ -26,6 +27,7 @@ const paths: Record<IconName, string> = {
   close: 'M6 6l12 12M18 6L6 18',
   download: 'M12 4v11M7 11l5 5 5-5M5 20h14',
   pin: 'M12 21s7-6.2 7-11a7 7 0 1 0-14 0c0 4.8 7 11 7 11Z M12 12a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z',
+  settings: 'M4 7h8M16 7h4M4 17h4M12 17h8M14 5v4M8 15v4',
 }
 
 const filled: IconName[] = ['github']

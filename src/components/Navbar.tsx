@@ -1,11 +1,13 @@
 import { useEffect, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { site, type NavItem } from '../data/site'
+import type { NavItem } from '../data/site'
+import { useContent } from '../lib/content'
 import { Icon } from './Icon'
 
 const NAV_OFFSET = 72
 
 export function Navbar() {
+  const { site } = useContent()
   const { pathname } = useLocation()
   const navigate = useNavigate()
   const isHome = pathname === '/'
@@ -45,7 +47,7 @@ export function Navbar() {
     )
     elements.forEach((el) => observer.observe(el))
     return () => observer.disconnect()
-  }, [isHome, pathname])
+  }, [isHome, pathname, site.nav])
 
   const scrollToId = (id: string) => {
     const el = document.getElementById(id)
@@ -108,7 +110,7 @@ export function Navbar() {
 
         <div className="flex items-center gap-2">
           <a
-            href={site.socials[0].href}
+            href={site.socials[0]?.href ?? '#'}
             target="_blank"
             rel="noreferrer noopener"
             className="hidden h-9 w-9 place-items-center rounded-full border border-white/10 text-paper/60 transition-colors hover:border-white/25 hover:text-paper sm:grid"

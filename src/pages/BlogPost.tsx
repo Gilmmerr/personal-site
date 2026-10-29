@@ -11,7 +11,8 @@ import markdown from 'highlight.js/lib/languages/markdown'
 import tsx from 'highlight.js/lib/languages/typescript'
 import typescript from 'highlight.js/lib/languages/typescript'
 import xml from 'highlight.js/lib/languages/xml'
-import { formatDate, getPost, getPostNeighbors, slugify } from '../lib/posts'
+import { formatDate, slugify } from '../lib/posts'
+import { useContent } from '../lib/content'
 import { useReveal } from '../lib/useReveal'
 import { Icon } from '../components/Icon'
 import { NotFound } from './NotFound'
@@ -41,7 +42,8 @@ function nodeText(node: React.ReactNode): string {
 
 export function BlogPost() {
   const { slug } = useParams<{ slug: string }>()
-  const post = slug ? getPost(slug) : undefined
+  const { posts } = useContent()
+  const post = slug ? posts.find((item) => item.slug === slug) : undefined
   const [activeId, setActiveId] = useState('')
   useReveal()
 
@@ -69,7 +71,9 @@ export function BlogPost() {
 
   if (!post) return <NotFound title="文章不存在" desc="链接可能失效了，回博客列表看看其他的。" />
 
-  const { prev, next } = getPostNeighbors(post.slug)
+  const index = posts.findIndex((item) => item.slug === post.slug)
+  const prev = index >= 0 ? posts[index + 1] : undefined
+  const next = index > 0 ? posts[index - 1] : undefined
 
   return (
     <article className="pb-24 pt-28">

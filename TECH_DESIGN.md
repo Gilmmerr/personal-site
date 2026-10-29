@@ -47,33 +47,38 @@ personal-site/
 ├── tsconfig.json             TS 严格模式配置
 ├── public/
 │   ├── avatar.svg            头像（SVG，随主题变色）
-│   └── resume.html           可打印简历页，Ctrl+P 存 PDF
+│   ├── resume.html           可打印简历页，Ctrl+P 存 PDF
+│   └── content.json          【可选】后台导出的内容文件，存在即覆盖默认文案
 └── src/
-    ├── main.tsx              挂载 + HashRouter
-    ├── App.tsx               路由表 + 全局布局（星空、导航、页脚）
+    ├── main.tsx              初始化内容层 → 挂载 React
+    ├── App.tsx               路由表 + 站点外壳（星空、导航、页脚）；/admin 不套壳
     ├── index.css             Tailwind 指令 + 全局样式 + 代码高亮主题
     ├── data/
-    │   ├── site.ts           站点信息：姓名、方向、简介、社交、导航
-    │   ├── skills.ts         技能分组与熟练度
-    │   └── projects.ts       项目列表与详情（含 slug）
+    │   ├── site.ts           站点信息：姓名、方向、简介、社交、导航（默认值）
+    │   ├── skills.ts         技能分组与熟练度（默认值）
+    │   └── projects.ts       项目列表与详情（默认值）
     ├── lib/
-    │   ├── posts.ts          读取 md → 解析 frontmatter → 排序 → 生成 TOC
-    │   └── useReveal.ts      滚动渐入 hook
-    ├── components/
-    │   ├── Starfield.tsx     Canvas 星空背景
-    │   ├── Navbar.tsx        吸顶导航 + 移动端菜单 + 锚点高亮
-    │   ├── Footer.tsx        页脚
-    │   ├── SectionHeading.tsx 区块标题（eyebrow + 主标题 + 描述）
-    │   ├── Hero.tsx          首屏
-    │   ├── About.tsx         个人介绍 + 时间线
-    │   ├── Skills.tsx        技能分组
-    │   ├── Projects.tsx      项目卡片
-    │   └── Contact.tsx       联系方式 + 留言表单
+    │   ├── content.ts        内容层：合并默认 / content.json / 本地草稿，useContent()
+    │   ├── posts.ts          读取 md → 解析 frontmatter → 生成 TOC 与阅读时长
+    │   └── useReveal.ts      滚动渐入 hook（含新增节点的补扫）
+    ├── components/           首页区块组件（一律通过 useContent 取数据）
     ├── pages/
     │   ├── Home.tsx          首页（组合上述区块）
     │   ├── ProjectDetail.tsx 项目详情
     │   ├── BlogList.tsx      博客列表
-    │   └── BlogPost.tsx      博客详情（正文 + TOC）
+    │   ├── BlogPost.tsx      博客详情（正文 + TOC）
+    │   └── admin/            内容管理台（按需加载，不进访客首屏）
+    │       ├── AdminPage.tsx 登录 + 外壳 + 保存/未保存状态 + ?tab= 深链
+    │       ├── OverviewPanel.tsx  数据概览
+    │       ├── SitePanel.tsx      站点信息编辑
+    │       ├── TimelinePanel.tsx  经历时间线
+    │       ├── SkillsPanel.tsx    技能分组与熟练度
+    │       ├── ProjectsPanel.tsx  项目列表 + 详情编辑
+    │       ├── PostsPanel.tsx     文章 Markdown 编辑
+    │       ├── DataPanel.tsx      导入导出与重置
+    │       ├── ui.tsx             表单控件（Field / TextInput / Btn / Block …）
+    │       ├── helpers.ts         不可变数组操作、下载、复制
+    │       └── types.ts           PanelProps 与 TabKey
     └── content/posts/
         └── *.md              博客文章，frontmatter + 正文
 ```
@@ -175,6 +180,29 @@ TOC 从原始 markdown 里正则提取 `## / ###` 行；正文渲染时通过 `c
 
 优先 `navigator.clipboard.writeText`（需 https 或 localhost）；失败时退回隐藏 `textarea` + `document.execCommand('copy')`，再失败则提示手动选择。按钮文案在成功后切换为「已复制」并在 1.6s 后复原。
 
+### 4.7 内容层与后台管理的三级数据源
+
+站点是纯静态的，没有服务端，又要让内容能被在线编辑，因此把内容抽成一层，按优先级合并：
+
+| 优先级 | 来源 | 生效范围 |
+|---|---|---|
+| 高 | `localStorage['personal-site:content:draft']` | 当前浏览器立即生效，用于反复微调 |
+| 中 | 站点根目录的 `content.json` | 所有访客，部署后生效 |
+| 低 | `src/data/*.ts`、`src/content/posts/*.md` 打包进来的默认值 | 兜底，永远可用 |
+
+```ts
+// 组件只认这一个入口，不直接 import 数据文件
+const { site, projects, posts, skillGroups } = useContent()
+```
+
+- 启动时 `main.tsx` 先 `await initContent()` 再渲染，避免首屏先闪默认文案；
+- `content.json` 用 `new URL('content.json', document.baseURI)` 取绝对地址，`base: './'` 与子路径部署都能命中；
+- 外部 JSON 一律过 `normalizeContent()`：缺字段补默认值、类型不对的丢弃、数值夹在 0–100，防止手改坏文件导致白屏；
+- 状态用 `useSyncExternalStore` 维护，`saveDraft()` 写入 localStorage 后同一个快照对象通知所有订阅组件重渲染，不需要刷新页面；
+- 后台的路由 `/admin` 单独懒加载（约 37KB），并使用独立外壳——星空 Canvas、导航、页脚都不挂载。
+
+后台编辑器维护一份 `draft` 副本，保存前与当前内容做 `JSON.stringify` 比较（忽略 `updatedAt`）来驱动「未保存」标记；离开页面时通过 `beforeunload` 拦截。
+
 ## 五、构建与部署
 
 ```bash
@@ -201,4 +229,6 @@ npm run preview    # 本地预览构建产物
 | 留言表单无后端 | 静态站无法真正发信，改为校验 + 本地存储 + 明确提示，不伪装成已发送 |
 | 不留评论系统 | 需要第三方服务与账号，与「不接入第三方追踪」冲突 |
 | 用 HashRouter | 接受 URL 带 `#`，换取零配置部署 |
+| 后台口令在前端校验 | 口令写在打包后的 JS 里，只能挡住误入。真正需要防护时换成带鉴权的接口，但那要求有服务端 |
+| 后台改动默认只在本机 | 纯静态站无法直接写服务器文件，故需「导出 content.json → 提交 → 重新部署」一步；换来的是不改部署方式、不引数据库 |
 | 手写组件而非引库 | 多写约 300 行样式，换来更小的产物和完整的深色控制力 |
