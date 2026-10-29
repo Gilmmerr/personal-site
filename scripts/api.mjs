@@ -8,10 +8,11 @@
 import { spawn, spawnSync } from 'node:child_process'
 import { existsSync, readdirSync } from 'node:fs'
 import { resolve } from 'node:path'
+import { pathToFileURL } from 'node:url'
 
 const root = process.cwd()
 const isWin = process.platform === 'win32'
-const PORT = 8081
+const PORT = Number(process.env.API_PORT) || 8081
 
 function works(cmd) {
   try {
@@ -82,4 +83,7 @@ export function startBackend() {
   return child
 }
 
-startBackend()
+// 直接执行（npm run api）时才自动启动；被 dev.mjs / start.mjs 引入时由调用方决定何时起
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  startBackend()
+}

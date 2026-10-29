@@ -51,7 +51,7 @@ npm install
 npm run dev:full   # 同时起后端(8081) + 前端(5180)
 ```
 
-也可以分开起：`npm run api` 只起后端，`npm run dev` 只起前端。
+也可以分开起：`npm run api` 只起后端，`npm run dev` 只起前端。`dev:full` 会先探 8081，已有后端就直接复用；后端没起来时会等到接口返回 200 再拉前端，避免首屏读到默认文案。
 
 | 服务 | 地址 |
 |---|---|
@@ -59,15 +59,24 @@ npm run dev:full   # 同时起后端(8081) + 前端(5180)
 | 后端 | http://127.0.0.1:8081/api/content |
 | 后台 | http://127.0.0.1:5180/#/admin |
 
+链路不对时先跑体检，它会依次检查 MySQL 端口、16 张表、接口与前端四段：
+
+```bash
+npm run check
+```
+
 首次启动时，若 `site_profile` 表为空，后端会自动把 `db/seed.json` 灌进数据库（4 个项目 / 4 篇文章 / 4 组技能 / 4 段经历）。
 
 其它命令：
 
 ```bash
+npm run stop           # 停掉 5180 与 8081 上的开发服务
 npm run build           # 类型检查 + 打包到 dist/
 npm run export:seed     # 把 src/data 导出成 backend 的 seed.json
 npx vite build --outDir docs --emptyOutDir   # 重建 GitHub Pages 产物
 ```
+
+`npm run stop` 按端口查监听进程再 `taskkill`，所以能收掉从别的终端起的、或父进程已退出留下的孤儿进程（Java 后端就是这种：`mvn` 起了 java 子进程，光 kill 父进程杀不掉它）。只留数据库里的 16 张表不动，下次 `dev:full` 会重新连上。
 
 Node ≥ 18、JDK ≥ 17、Maven ≥ 3.6。
 

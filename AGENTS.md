@@ -21,6 +21,8 @@ npm run dev:full     # 同时起后端(8081) + 前端(5180)
 npm run api          # 只起后端 Spring Boot
 npm run dev          # 只起前端 Vite
 npm run build        # 类型检查（tsc --noEmit）+ 打包到 dist/
+npm run stop         # 停掉 5180 与 8081（按端口查进程再 kill，能收掉孤儿进程）
+npm run check        # 体检：MySQL → 16 张表 → 后端接口 → 前端
 npm run export:seed  # 改了 src/data 后，重新导出后端初始化用的 seed.json
 ```
 
