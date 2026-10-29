@@ -4,7 +4,7 @@
 
 ## 一、项目是什么
 
-个人展示网站。纯静态单页应用，用于呈现个人介绍、技能、项目作品与技术博客。没有服务端，没有数据库，没有用户系统。
+个人展示网站。前端是 React 单页应用，呈现个人介绍、技能、项目作品与技术博客；内容存在本机 MySQL，由 `backend/` 下的 Spring Boot + MyBatis 提供读写接口，`/#/admin` 是在线编辑后台。
 
 - 产品需求见 `PRD.md`
 - 技术方案见 `TECH_DESIGN.md`
@@ -13,13 +13,18 @@
 ## 二、如何运行
 
 ```bash
-npm install          # 安装依赖
-npm run dev          # 开发服务，默认 http://localhost:5173
+# 首次：建库（16 张表），并在 backend/src/main/resources/application-local.yml 填自己的数据库密码
+mysql -u root -p < backend/src/main/resources/db/schema.sql
+
+npm install          # 安装前端依赖
+npm run dev:full     # 同时起后端(8081) + 前端(5180)
+npm run api          # 只起后端 Spring Boot
+npm run dev          # 只起前端 Vite
 npm run build        # 类型检查（tsc --noEmit）+ 打包到 dist/
-npm run preview      # 预览 dist/ 产物
+npm run export:seed  # 改了 src/data 后，重新导出后端初始化用的 seed.json
 ```
 
-要求 Node ≥ 18。提交前必须保证 `npm run build` 通过，不允许提交带类型错误或未使用变量的代码。
+要求 Node ≥ 18、JDK ≥ 17、Maven ≥ 3.6、MySQL 8/9。提交前必须保证前端 `npm run build` 通过、后端 `mvn -f backend/pom.xml compile` 通过。
 
 ## 三、技术栈（不可擅自替换）
 
@@ -30,14 +35,23 @@ npm run preview      # 预览 dist/ 产物
 | 样式 | Tailwind CSS 3.4，配置在 `tailwind.config.js` |
 | 路由 | react-router-dom 6，**HashRouter**（不要改成 BrowserRouter） |
 | Markdown | react-markdown + remark-gfm + rehype-highlight |
+| 后端 | Java 21 + Spring Boot 3.3.5 + MyBatis 3.0.3，端口固定 **8081** |
+| 数据库 | MySQL 8/9，库名 `personal_site`，16 张表 |
 
-禁止引入：Next.js、任何组件库（MUI / Ant Design / shadcn）、任何动画库（Framer Motion / GSAP）、任何图表库。需要动画用 CSS transition，需要图标用内联 SVG 或 emoji。
+禁止引入：Next.js、任何组件库（MUI / Ant Design / shadcn）、任何动画库（Framer Motion / GSAP）、任何图表库、JPA / Hibernate。需要动画用 CSS transition，需要图标用内联 SVG 或 emoji，数据库访问一律走 MyBatis。
 
 新增依赖前先确认是否真有必要：能用 20 行代码解决的，不要装包。
 
 ## 四、目录结构与职责
 
 ```
+backend/         Spring Boot 后端（独立 Maven 工程）
+  controller/    ContentController：GET/PUT /api/content、reset、health
+  service/       ContentService（读拼装 / 写事务）、SeedService（seed.json）
+  mapper/        ContentMapper 接口 + resources/mapper/ContentMapper.xml 里的 SQL
+  model/         Content 及嵌套 DTO，字段与前端 Content 一一对应
+  config/        CORS、异常处理、启动灌种子
+  resources/db/  schema.sql（建表）、seed.json（初始内容）
 src/data/        默认内容（站点信息、技能、项目）——只作为兜底，不直接被组件引用
 src/content/     博客 Markdown——新增文章只放文件，不改代码
 src/lib/         纯函数与 hook（内容层 content.ts、文章解析、滚动渐入）
@@ -53,7 +67,8 @@ src/index.css    Tailwind 指令 + 全局样式 + 代码高亮主题
 - `components/` 里不写死内容，数据一律从 `useContent()` 或 props 拿；
 - `lib/` 保持无副作用，不引 React 之外的依赖（hook 除外）；
 - 路由只集中在 `App.tsx` 里声明；后台路由单独挂，不要套星空与页脚；
-- 后台表单只改 `draft` 副本，落盘统一走 `saveDraft()`，不要在面板里直接写 localStorage。
+- 后台表单只改 `draft` 副本，落盘统一走 `saveContent()`（异步，返回 `{ ok, message }`），不要在面板里直接 `fetch`；
+- 后端字段名必须与前端 `Content` 对齐；改结构时两边一起改，并在 `ContentMapper.xml` 用 `AS` 别名对上。
 
 ## 五、代码风格
 
@@ -84,15 +99,20 @@ src/index.css    Tailwind 指令 + 全局样式 + 代码高亮主题
 4. 新增或修改的链接可点击且不 404（项目 slug 与文章文件名对应）；
 5. 博客详情页 TOC 点击能跳到对应标题；
 6. 弱网 / 刷新后直接访问 `/#/blog/xxx` 仍能正常渲染；
-7. 后台：在 `/#/admin` 改一处文案并保存，回首页能立即看到；点「清除本地草稿」能回到默认内容；
-8. 后台：`/#/admin?tab=projects` 这种带参数的地址刷新后仍停在对应模块。
+7. 后台：在 `/#/admin` 改一处文案并保存，回首页能立即看到；后台「数据」页显示「内容来源：MySQL 数据库」「已连接（127.0.0.1:8081）」；
+8. 后台：`/#/admin?tab=projects` 这种带参数的地址刷新后仍停在对应模块；
+9. 后端：`curl http://127.0.0.1:8081/api/content` 能返回完整结构；后台保存后 MySQL 里对应表的行数与内容跟着变；
+10. 后端关掉时打开站点，首页仍能显示（退到静态快照 / 默认值），后台顶部出现黄色「没连上后端」提示。
 
 ## 八、注意事项
 
-- **不要引入后端**。留言表单是前端演示，提交后只做本地存储与提示，不得写成「已发送」；后台同理，不得为此引入 Express / 数据库；
+- **后端只服务内容读写**。不要往里塞用户系统、评论、上传；留言表单仍是前端演示，只做本地存储与提示，不得写成「已发送」；
 - **不要改路由模式**。HashRouter 是部署零配置的前提，改成 BrowserRouter 会导致刷新 404；后台口令校验也只是前端逻辑，不要写成「安全登录」；
+- **不要把数据库密码写进 `application.yml`**。密码只放 `application-local.yml`（已在 `.gitignore` 里），该文件不存在时用环境变量 `MYSQL_PASSWORD`；
+- **不要给写接口放开跨域**。`WebConfig` 只放行 `localhost` / `127.0.0.1`，`server.address` 固定 `127.0.0.1`，不要改成 `0.0.0.0`；
 - **不要在组件里写死个人信息**。姓名、邮箱、社交链接一律从 `useContent()` 读；
-- **不要绕过内容层写 localStorage**。键名 `personal-site:content:draft` 只由 `lib/content.ts` 读写，其他地方直接用会导致状态不同步；
+- **不要绕过内容层直连接口**。`saveContent()` / `resetContent()` 是唯一入口，面板里自己 `fetch` 会导致状态不同步；
+- **不要依赖 `SERVER_PORT` 之类的外部变量决定端口**。启动脚本用 `--server.port=8081` 钉死，因为外部注入的 `SERVER__PORT` 会覆盖配置文件；
 - **后台面板保持深色 + 同一套 token**，不要引入浅色主题或组件库；
 - **不要删除 `prefers-reduced-motion` 分支**。关掉它会让开启无障碍选项的用户看到无谓动画；
 - 修改 `PRD.md` 或 `TECH_DESIGN.md` 时同步更新本文件中的技术栈与目录说明；

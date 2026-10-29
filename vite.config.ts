@@ -6,7 +6,9 @@ const previewPort = Number(process.env.PORT) || 4173
 
 // 本地开发固定用 Vite 默认端口，且只监听回环地址；与 preview 的端口解耦，
 // 否则 dev 会占用 preview 的端口，本地预览面板扫描不到开发服务
-const DEV_PORT = 5173
+// 本地开发端口：5173 常被别的项目占着，默认用 5180，需要时用 VITE_DEV_PORT 覆盖。
+// strictPort 保持 true，端口冲突时立刻报错，避免以为连的是本项目
+const DEV_PORT = Number(process.env.VITE_DEV_PORT) || 5180
 
 // 后端接口地址：本地 Spring Boot 只监听回环地址（8080 被别的服务占了，用 8081）
 const API_TARGET = 'http://127.0.0.1:8081'
